@@ -1,11 +1,11 @@
 {
-  "name": "mg-module-quickswitch",
-  "version": "1.0.36",
+  "name": "mg-online-audit",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name mg-module-quickswitch --dest lib src/components/index.js"
+    "lib": "vue-cli-service build --target lib --name mg-online-audit --dest lib src/components/index.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -46,13 +46,13 @@
     "not dead"
   ],
   "description": "## Project setup",
-  "main": "lib/mg-module-quickswitch.common.js",
+  "main": "lib/mg-online-audit.common.js",
   "directories": {
     "lib": "lib"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Maggiewow/mg-module-quickswitch.git"
+    "url": "git+https://github.com/Maggiewow/mg-online-audit.git"
   },
   "keywords": [
     "quickswitch"
@@ -63,7 +63,7 @@
     "registry": "http://registry.npmjs.org/"
   },
   "bugs": {
-    "url": "https://github.com/Maggiewow/mg-module-quickswitch/issues"
+    "url": "https://github.com/Maggiewow/mg-online-audit/issues"
   },
-  "homepage": "https://github.com/Maggiewow/mg-module-quickswitch#readme"
+  "homepage": "https://github.com/Maggiewow/mg-online-audit#readme"
 }
