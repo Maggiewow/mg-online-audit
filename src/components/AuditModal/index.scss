@@ -5,13 +5,12 @@
   // justify-content: flex-end;
   align-items: flex-start;
 }
-// .weight-title {
-//   width: 800px;
-//   text-align: center;
-//   font-size: 22px;
-//   height: 40px;
-//   line-height: 40px;
-// }
+.weight-title {
+  font-size: 18px;
+  font-weight: bold;
+  height: 40px;
+  line-height: 40px;
+}
 .set-form {
   /* width: 100%;*/
   width: 350px;
@@ -71,7 +70,7 @@
     width: 800px;
 
     .video-title {
-      text-align: center;
+      padding: 0 10px;
       font-size: 22px;
       height: 45px;
       line-height: 45px;
@@ -81,18 +80,19 @@
       padding: 15px 15px 0;
       width: 800px;
       display: flex;
+      justify-content: center;
       background-color: #000;
       color:#fff;
+      font-size: 14px;
       
       .time-show{
         line-height: 40px;
-        width: 90px;
+        width: 100px;
         text-align: center;
-        font-size: 12px;
       }
 
       .slider-line{
-        width: 590px;
+        width: 570px;
         position: relative;
         .el-slider__button-wrapper {
           display: none;
