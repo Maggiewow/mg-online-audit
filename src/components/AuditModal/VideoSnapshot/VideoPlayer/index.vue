@@ -17,7 +17,7 @@
       @getEditMode="getEditMode"
     ></image-draw>
     <div id="videoPlayer">
-      <p class="white-title">{{ videoName }}</p>
+      <!-- <p class="white-title">{{ videoName }}</p> -->
       <video id="myVideo" ref="originalVideo" class="video-js my_video" controls>
         <source :src="videoUrl" type="video/mp4" />
         <source
@@ -228,10 +228,12 @@ export default {
         })
         .catch((err) => {
           _self.playerControls.stateIcon = 'el-icon-video-play';
+        })
+        .finally(() => {
+          setTimeout(() => {
+            _self.playerStepInterval();
+          }, 500);
         });
-      setTimeout(() => {
-        _self.playerStepInterval();
-      }, 1000);
     },
     /**
      * video.js
@@ -250,7 +252,7 @@ export default {
     addRateTool() {
       if (this.addTools === 'NO') {
         $('.vjs-control-bar').append(
-          '<button class="vjs-control " id="video_rate_opt"><select class="sel-rate">\n' +
+          '<button class="vjs-control " id="video_rate_opt" style="margin-left:14px;"><select class="sel-rate">\n' +
             '<option value ="vol" class="opt-rate">0.5X</option>\n' +
             '<option value ="volv" class="opt-rate">0.75X</option>\n' +
             '<option value ="volvo" id="default_opt" class="opt-rate" selected>1.0X</option>\n' +
@@ -260,7 +262,7 @@ export default {
             '</select></button>'
         );
         $('.vjs-control-bar').append(
-          '<button class="vjs-control" id="video_edit_icon"><div id="edit-icon" class="edit-btn-item" title="批注"><img class="edit-img" src=' +
+          '<button class="vjs-control" id="video_edit_icon" style="width:90px;"><div id="edit-icon" class="edit-btn-item" title="批注"><img class="edit-img" src=' +
             require('./player-icon/icon-edit.png') +
             ' />批注</div></button>'
         );
@@ -435,6 +437,8 @@ export default {
       this.$emit('getCurrentVideoMode', true);
     },
     calcFrame(time) {
+      if (!time) return 0;
+
       let frameTime = 1000 / 25; // 一帧多少毫秒
       let frames = (time * 1000) / frameTime;
       frames = Math.ceil(frames);
@@ -445,6 +449,7 @@ export default {
         // this.$message.error('无效视频')
         return '00:00';
       }
+
       var value = parseInt(value);
       var second = value % 60;
       var minute = (value - second) / 60;
@@ -536,6 +541,19 @@ export default {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      .vjs-control {
+        font-size: 12px;
+      }
+      .vjs-control-bar {
+        justify-content: flex-end;
+      }
+      .vjs-play-control {
+        flex: 1;
+      }
+      .vjs-icon-placeholder:before {
+        padding-left: 20px;
+        text-align: left !important;
+      }
     }
   }
   .img-vision {
@@ -555,7 +573,7 @@ export default {
 }
 
 #playerToolbar {
-  font-size: 12px;
+  font-size: 14px;
   width: 100%;
   background-color: #000;
   z-index: 1000;
@@ -574,7 +592,7 @@ export default {
     .slider {
       margin: 0 10px;
       // width: 68%;
-      width: 73%;
+      width: 71%;
       color: #fff;
     }
   }
@@ -602,6 +620,7 @@ export default {
   }
 }
 .sel-rate {
+  margin-top: 6px;
   padding: 0 9px;
   width: 50px;
   height: 20px;
@@ -629,9 +648,10 @@ export default {
   top: -0.5em;
 }
 .vjs-slider-vertical .vjs-volume-level:before {
-  left: -0.5em;
+  left: -0.4em;
 }
 .edit-btn-item {
+  margin-top: 6px;
   margin-left: 18px;
   padding: 0px 7px;
   width: 60px;

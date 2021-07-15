@@ -5,7 +5,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2021-07-14 15:10:18
+ * @LastEditTime: 2021-07-15 10:35:56
 -->
 <template>
   <div>
@@ -22,7 +22,7 @@
     >
       <div class="modal-inner-mask" v-if="maskShow"></div>
       <div class="title-opr-line">
-        <!-- <h2 class="weight-title">{{ playInfo.name || "" }}</h2> -->
+        <h2 class="weight-title">{{ playInfo.name || '' }}</h2>
 
         <Form class="set-form" :model="formItem" :label-width="0">
           <FormItem label="" prop="version" class="per-sel">
@@ -381,6 +381,7 @@
       @chooseDraftCancel="chooseSeriesCancel"
     ></relate-series-modal>
     <update-version
+      ref="upVersion"
       :chooseModalValue="uploadModal"
       @chooseDraftOk="confirmUpdate"
       @chooseDraftCancel="cancelUpdate"
@@ -1000,6 +1001,7 @@ export default {
     },
     handleUpdateVersion() {
       this.uploadModal = true;
+      this.$refs.upVersion.openModal();
     },
     // 关联文稿
     handleChooseManu() {

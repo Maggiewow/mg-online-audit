@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 15:02:00
- * @LastEditTime: 2021-07-07 11:53:07
+ * @LastEditTime: 2021-07-15 10:36:15
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \manuscript-pc\src\view\components\manuscripts\wechatDraftModal.vue
@@ -23,14 +23,8 @@
         ></vue-uploader>
       </div>
       <div slot="footer">
-        <Button type="info" size="large" @click="chooseDraftCancel"
-          >取消</Button
-        >
-        <Button
-          type="primary"
-          size="large"
-          :loading="isloading"
-          @click="chooseDraftOk"
+        <Button type="info" size="large" @click="chooseDraftCancel">取消</Button>
+        <Button type="primary" size="large" :loading="isloading" @click="chooseDraftOk"
           >确定</Button
         >
       </div>
@@ -39,49 +33,52 @@
 </template>
 
 <script>
-import VueUploader from "_c/vueuploader";
+import VueUploader from '_c/vueuploader';
 
 export default {
-  name: "wechatDraftModal",
+  name: 'wechatDraftModal',
   data() {
     return {
       modalKey: null,
-      accept: "video",
+      accept: 'video',
       attachment: [],
-      isloading: false
+      isloading: false,
     };
   },
   props: {
     chooseModalValue: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   watch: {
     chooseModalValue: {
       handler(newValue, oldValue) {
         this.modalKey = newValue;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   components: {
-    VueUploader
+    VueUploader,
   },
   mounted() {},
   methods: {
+    openModal() {
+      this.modalKey = true;
+    },
     uploadOnSuccess(file, response) {
       if (response.headers.state_code == 200) {
         let data = {
           name: file.name,
           url: response.data.data.url,
-          file_type: response.data.data.file_type
+          file_type: response.data.data.file_type,
         };
-        console.log("上传成功", data);
+        console.log('上传成功', data);
         this.attachment.push(data);
       } else {
         this.$Notice.error({
-          title: response.msg
+          title: response.msg,
         });
       }
     },
@@ -93,38 +90,38 @@ export default {
     },
     uploadOnError(errorMessage) {
       this.$Notice.error({
-        title: errorMessage
+        title: errorMessage,
       });
     },
     uploadError(file, reason) {
       console.log(reason);
-      this.$emit("uploadError", file, reason);
+      this.$emit('uploadError', file, reason);
     },
     chooseDraftOk() {
-      console.log("确认===>", this.attachment);
+      console.log('确认===>', this.attachment);
       if (!this.attachment || this.attachment.length === 0) {
-        this.$Message.warning("请先上传视频");
+        this.$Message.warning('请先上传视频');
         return;
       }
       if (this.attachment && this.attachment.length > 1) {
-        this.$Message.warning("仅支持单条视频保存");
+        this.$Message.warning('仅支持单条视频保存');
         return;
       }
 
       this.isloading = true;
       let info = this.attachment[0];
-      this.$emit("chooseDraftOk", info, () => {
+      this.$emit('chooseDraftOk', info, () => {
         this.isloading = false;
         this.attachment = [];
       });
-      console.log("确认保存===>", info);
+      console.log('确认保存===>', info);
     },
     chooseDraftCancel() {
       this.attachment = [];
-      this.$emit("chooseDraftCancel");
-      console.log("取消保存===>", this.attachment);
-    }
-  }
+      this.$emit('chooseDraftCancel');
+      console.log('取消保存===>', this.attachment);
+    },
+  },
 };
 </script>
 
