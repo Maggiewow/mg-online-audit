@@ -252,7 +252,7 @@ export default {
     addRateTool() {
       if (this.addTools === 'NO') {
         $('.vjs-control-bar').append(
-          '<button class="vjs-control " id="video_rate_opt" style="margin-left:14px;"><select class="sel-rate">\n' +
+          '<button class="vjs-control " id="video_rate_opt" style="margin-left:14px;margin-right:15px;"><select class="sel-rate">\n' +
             '<option value ="vol" class="opt-rate">0.5X</option>\n' +
             '<option value ="volv" class="opt-rate">0.75X</option>\n' +
             '<option value ="volvo" id="default_opt" class="opt-rate" selected>1.0X</option>\n' +
@@ -652,7 +652,7 @@ export default {
 }
 .edit-btn-item {
   margin-top: 6px;
-  margin-left: 18px;
+  margin-left: 8px;
   padding: 0px 7px;
   width: 60px;
   cursor: pointer;
