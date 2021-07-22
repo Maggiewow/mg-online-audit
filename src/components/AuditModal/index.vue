@@ -580,7 +580,7 @@ export default {
 
       getSucaiVersionDetail(file_id, initVersion)
         .then((res) => {
-          console.log('打开弹窗res.data', res.data);
+          console.log('打开弹窗1res.data', res.data);
           if (res.data.msg && res.data.msg.msg && res.data.msg.msg === '登录过期') {
             this.$Message.warning('登录过期，请重试');
             callback && callback();
