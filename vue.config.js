@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-24 09:12:36
- * @LastEditTime: 2021-07-14 11:22:31
+ * @LastEditTime: 2021-08-10 17:35:18
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\vue.config.js
@@ -51,7 +51,11 @@ module.exports = {
   chainWebpack: (config) => {
     config.module
       .rule('js')
-      .include.add('/packages')
+      // .include.add('/packages')
+      .include.add(resolve('src'))
+      .add(resolve('public/lib/canvastools'))
+      .add(resolve('public/lib/jwplayer-v6.1.2972'))
+      .add(resolve('public/lib/videojs'))
       .end()
       .use('babel')
       .loader('babel-loader')
