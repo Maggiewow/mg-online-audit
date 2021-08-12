@@ -38,7 +38,15 @@
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
+<<<<<<< HEAD
     "babel-plugin-import": "^1.13.3",
+=======
+    "babel-plugin-import": "^1.13.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "es6-promise": "^4.2.8",
+>>>>>>> 50fc1c19adf7a9e851c78c3283711a1c27b3ece5
     "less": "^2.7.3",
     "less-loader": "^5.0.0",
     "node-loader": "^0.6.0",

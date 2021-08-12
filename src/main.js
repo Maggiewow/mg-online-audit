@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-07-14 14:36:29
+ * @LastEditTime: 2021-08-10 18:11:49
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\main.js
@@ -23,6 +23,11 @@ Vue.use(ViewUI);
 
 import ZkTable from 'vue-table-with-tree-grid';
 Vue.use(ZkTable);
+
+import 'babel-polyfill';
+import Es6Promise from 'es6-promise';
+require('es6-promise').polyfill();
+Es6Promise.polyfill();
 
 Vue.config.productionTip = false;
 Vue.prototype.$config = config;
