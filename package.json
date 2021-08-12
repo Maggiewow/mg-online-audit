@@ -1,6 +1,6 @@
 {
   "name": "mg-online-audit",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -30,8 +30,14 @@
     "ym-bridge-shandianyun": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
     "@vue/cli-plugin-babel": "^4.4.0",
     "@vue/cli-service": "^4.4.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
     "babel-plugin-import": "^1.13.0",
     "less": "^2.7.3",
     "less-loader": "^5.0.0",

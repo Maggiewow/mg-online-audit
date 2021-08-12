@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-12 18:18:35
- * @LastEditTime: 2020-12-03 09:39:25
+ * @LastEditTime: 2021-08-10 15:46:20
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath:
@@ -17,4 +17,5 @@ module.exports = {
       },
     ],
   ],
+  sourceType: 'unambiguous',
 };

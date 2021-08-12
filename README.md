@@ -40,6 +40,18 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 淘宝镜像 npm config set registry https://registry.npm.taobao.org
 不使用淘宝镜像 npm config set registry "http://registry.npmjs.org/"
 
+"devDependencies": {
+"@vue/cli-plugin-babel": "^4.4.0",
+"@vue/cli-service": "^4.4.0",
+"babel-plugin-import": "^1.13.0",
+"less": "^2.7.3",
+"less-loader": "^5.0.0",
+"node-loader": "^0.6.0",
+"node-sass": "^4.14.1",
+"sass-loader": "^7.1.0",
+"vue-template-compiler": "^2.6.11"
+},
+
 npm run lib
 git 提交
 npm version patch
