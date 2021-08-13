@@ -8,14 +8,8 @@
  */
 module.exports = {
   presets: [
-    [
-      '@vue/app',
-      // '@vue/cli-plugin-babel/preset',
-      // {
-      //   useBuiltIns: 'entry',
-      //   polyfills: ['es6.promise', 'es6.symbol'],
-      // },
-    ],
+    '@vue/cli-plugin-babel/preset',
+    ["@babel/preset-env", { "modules": false }]
   ],
   plugins: [
     [
@@ -25,6 +19,13 @@ module.exports = {
         libraryDirectory: 'src/components',
       },
     ],
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]
   ],
   sourceType: 'unambiguous',
 };
