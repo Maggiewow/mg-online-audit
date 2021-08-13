@@ -52,12 +52,16 @@ import iconFullscreen from './icons/icon-fullscreen.png';
 import iconEdit from './player-icon/icon-edit.png';
 import ImageDraw from '../ImageDraw';
 import { calcPercent } from '../../util';
+import { Row, Col, Slider} from 'element-ui'
 import $ from 'jquery';
 import videojs from 'video.js';
 
 export default {
   components: {
     ImageDraw,
+    Row,
+    Col,
+    Slider
   },
   name: 'VideoPlayer',
 

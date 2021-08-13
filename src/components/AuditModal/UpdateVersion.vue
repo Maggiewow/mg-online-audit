@@ -34,6 +34,7 @@
 
 <script>
 import VueUploader from '_c/vueuploader';
+import { Modal, Button} from 'view-design'
 
 export default {
   name: 'wechatDraftModal',
@@ -61,6 +62,7 @@ export default {
   },
   components: {
     VueUploader,
+    Modal, Button
   },
   mounted() {},
   methods: {

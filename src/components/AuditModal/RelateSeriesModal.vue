@@ -63,6 +63,7 @@
 import { getSeriesCates, getAllSeriesList } from "@/api/manu";
 import { s_to_hs, dateFormat } from "./util";
 import { debounce, uniq } from "lodash";
+import { Modal, Form, FormItem, Table, Page, DatePicker} from 'view-design'
 
 export default {
   name: "seriesModal",
@@ -75,6 +76,9 @@ export default {
       type: Array,
       default: []
     }
+  },
+  components: {
+    Modal, Form, FormItem, Table, Page, DatePicker,
   },
   data() {
     return {

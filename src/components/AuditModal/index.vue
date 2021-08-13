@@ -400,7 +400,8 @@ import UpdateVersion from './UpdateVersion';
 import InfiniteLoading from 'vue-infinite-loading';
 
 import { setBase64toFile, downloadVideo, calcPercent } from './util';
-import { Modal,  Tabs, TabPane, Button, Form, FormItem, Select, Option} from 'view-design'
+import { Modal,  Tabs, TabPane, Button, Form, FormItem, Select, Option, Poptip, Icon} from 'view-design'
+import { Slider } from 'element-ui'
 import {
   getSucaiVersionDetail,
   getAuditHistory,
@@ -430,7 +431,8 @@ export default {
     RelateSeriesModal,
     UpdateVersion,
     InfiniteLoading,
-    Modal, Tabs, TabPane, Button, Form, FormItem, Select, Option
+    Modal, Tabs, TabPane, Button, Form, FormItem, Select, Option, Poptip, Icon,
+    Slider
   },
   data() {
     return {
