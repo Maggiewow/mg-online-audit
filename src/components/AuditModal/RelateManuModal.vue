@@ -98,7 +98,7 @@
 import { getStatusArticleList, getAllRelatedSeriesList, getSeriesCates } from '@/api/manu';
 import { dateFormat } from './util';
 import { debounce, uniq } from 'lodash';
-import { Modal,  Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin} from 'view-design'
+import { Modal,  Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker} from 'view-design'
 export default {
   name: 'wechatDraftModal',
   props: {
@@ -116,7 +116,7 @@ export default {
     },
   },
   components: {
-    Modal, Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin,
+    Modal, Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker
   },
   data() {
     return {
