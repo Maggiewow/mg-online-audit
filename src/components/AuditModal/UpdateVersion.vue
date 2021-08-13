@@ -34,7 +34,7 @@
 
 <script>
 import VueUploader from '_c/vueuploader';
-import { Modal, Button} from 'view-design'
+import { Modal, Button, Dropdown, DropdownItem, DropdownMenu} from 'view-design'
 
 export default {
   name: 'wechatDraftModal',
@@ -48,7 +48,7 @@ export default {
   },
   props: {
     chooseModalValue: {
-      type: Boolean,
+      type: Boolean, Dropdown, DropdownItem, DropdownMenu,
       default: false,
     },
   },
@@ -62,7 +62,7 @@ export default {
   },
   components: {
     VueUploader,
-    Modal, Button
+    Modal, Button, Dropdown, DropdownItem, DropdownMenu
   },
   mounted() {},
   methods: {

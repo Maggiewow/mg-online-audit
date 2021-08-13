@@ -98,7 +98,7 @@
 import { getStatusArticleList, getAllRelatedSeriesList, getSeriesCates } from '@/api/manu';
 import { dateFormat } from './util';
 import { debounce, uniq } from 'lodash';
-import { Modal,  Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker} from 'view-design'
+import { Modal,  Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker, Dropdown, DropdownItem, DropdownMenu} from 'view-design'
 import ZkTable from 'vue-table-with-tree-grid';
 export default {
   name: 'wechatDraftModal',
@@ -117,7 +117,7 @@ export default {
     },
   },
   components: {
-    Modal, Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker,
+    Modal, Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker, Dropdown, DropdownItem, DropdownMenu,
     ZkTable
   },
   data() {
