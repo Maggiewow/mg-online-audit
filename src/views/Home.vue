@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-07-14 15:00:06
+ * @LastEditTime: 2021-09-08 15:42:31
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -45,11 +45,11 @@ export default {
     handleOpenVideo(id) {
       this.fileId = id;
       this.loading = true;
-      this.$nextTick(() => {
-        this.$refs.auditDom.showModal(() => {
-          this.loading = false;
-        });
-      });
+      // this.$nextTick(() => {
+      //   this.$refs.auditDom.showModal(() => {
+      //     this.loading = false;
+      //   });
+      // });
     },
   },
 };

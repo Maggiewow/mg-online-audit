@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-08-10 18:11:49
+ * @LastEditTime: 2021-09-08 15:38:32
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\main.js
@@ -13,13 +13,13 @@ import router from './router';
 import store from './store';
 import config from '@/config';
 
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+// import ElementUI from 'element-ui';
+// import 'element-ui/lib/theme-chalk/index.css';
+// Vue.use(ElementUI);
 
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
-Vue.use(ViewUI);
+// Vue.use(ViewUI);
 
 import ZkTable from 'vue-table-with-tree-grid';
 Vue.use(ZkTable);
