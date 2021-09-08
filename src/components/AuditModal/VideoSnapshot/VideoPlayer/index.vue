@@ -1,45 +1,45 @@
 <template>
-  <div
-    id="playerBox"
-    class="player-box"
-    v-loading="playerLoading"
-    :element-loading-text="playerLoadingText"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-  >
-    <image-draw
-      ref="imageDraw"
-      class="img-vision"
-      :style="{ display: !videoPlayerIsShow ? 'block' : 'none' }"
-      :width="width"
-      :height="height"
-      @getDrawImage="getDrawImage"
-      @getEditMode="getEditMode"
-    ></image-draw>
-    <div id="videoPlayer">
-      <!-- <p class="white-title">{{ videoName }}</p> -->
-      <video id="myVideo" ref="originalVideo" class="video-js my_video" controls>
-        <source :src="videoUrl" type="video/mp4" />
-        <source
-          src="https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4"
-          type="video/mp4"
-        />
-      </video>
-    </div>
+  <div>
+    <div id="playerBox" class="player-box">
+      <!-- 暂时注释
+      v-loading="playerLoading"
+      :element-loading-text="playerLoadingText"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)" -->
+      <image-draw
+        ref="imageDraw"
+        class="img-vision"
+        :style="{ display: !videoPlayerIsShow ? 'block' : 'none' }"
+        :width="width"
+        :height="height"
+        @getDrawImage="getDrawImage"
+        @getEditMode="getEditMode"
+      ></image-draw>
+      <div id="videoPlayer">
+        <!-- <p class="white-title">{{ videoName }}</p> -->
+        <video id="myVideo" ref="originalVideo" class="video-js my_video" controls>
+          <source :src="videoUrl" type="video/mp4" />
+          <source
+            src="https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
 
-    <el-row id="playerToolbar" v-if="isLoadVideo">
-      <el-col :span="24" class="bar-item">
-        <span class="text">{{ playerCurrentFrame }}帧 / {{ playerFormatCurrentPostion }}</span>
-        <div class="slider">
-          <el-slider
-            v-model="playerPercentage"
-            :show-tooltip="false"
-            @change="handleSliderChange"
-          ></el-slider>
-        </div>
-        <span class="text">{{ playerDurationFrame }}帧 / {{ playerFormatDuration }}</span>
-      </el-col>
-    </el-row>
+      <el-row id="playerToolbar" v-if="isLoadVideo">
+        <el-col :span="24" class="bar-item">
+          <span class="text">{{ playerCurrentFrame }}帧 / {{ playerFormatCurrentPostion }}</span>
+          <div class="slider">
+            <el-slider
+              v-model="playerPercentage"
+              :show-tooltip="false"
+              @change="handleSliderChange"
+            ></el-slider>
+          </div>
+          <span class="text">{{ playerDurationFrame }}帧 / {{ playerFormatDuration }}</span>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -52,16 +52,17 @@ import iconFullscreen from './icons/icon-fullscreen.png';
 import iconEdit from './player-icon/icon-edit.png';
 import ImageDraw from '../ImageDraw';
 import { calcPercent } from '../../util';
-import { Row, Col, Slider} from 'element-ui'
+import { Row, Col, Slider, Loading } from 'element-ui';
 import $ from 'jquery';
 import videojs from 'video.js';
 
 export default {
   components: {
     ImageDraw,
-    Row,
-    Col,
-    Slider
+    'el-row': Row,
+    'el-col': Col,
+    'el-slider': Slider,
+    Loading,
   },
   name: 'VideoPlayer',
 

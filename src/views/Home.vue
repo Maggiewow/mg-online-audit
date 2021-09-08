@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-09-08 15:42:31
+ * @LastEditTime: 2021-09-08 16:40:37
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
 -->
 <template>
   <div class="comps">
-    <Button type="primary" :loading="loading" @click="handleOpenVideo('5', null)">打开弹窗</Button>
+    <Button type="primary" :loading="loading1" @click="handleOpenVideo('5', null)">打开弹窗</Button>
     <audit-modal
       ref="auditDom"
       :fileId="fileId"
@@ -21,15 +21,16 @@
 <script>
 // @ is an alias to /src
 import AuditModal from '@/components/AuditModal';
-
+import { Button } from 'view-design';
 export default {
   name: 'Home',
   components: {
     AuditModal,
+    Button,
   },
   data() {
     return {
-      loading: false,
+      loading1: false,
       fileId: '',
       userInfo: {
         id: '1000053',
@@ -44,12 +45,12 @@ export default {
     // 音视频打开弹窗需要等待接口返回
     handleOpenVideo(id) {
       this.fileId = id;
-      this.loading = true;
-      // this.$nextTick(() => {
-      //   this.$refs.auditDom.showModal(() => {
-      //     this.loading = false;
-      //   });
-      // });
+      this.loading1 = true;
+      this.$nextTick(() => {
+        this.$refs.auditDom.showModal(() => {
+          this.loading1 = false;
+        });
+      });
     },
   },
 };
