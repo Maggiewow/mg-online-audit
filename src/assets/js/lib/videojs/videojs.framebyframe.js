@@ -3,9 +3,10 @@
  * Copyright (c) Helena Rasche 2015 - Licensed MIT */
 // videojs-framebyframe-plugin
 
-const videojs = require('./video');
+// 移到src之后 加了这一行
+import videojs from './video';
+// const videojs = require('./video');
 // const videojs = require('videojs');
-// import videojs from 'videojs'
 
 var VjsButton = videojs.getComponent('Button');
 var FBFButton = videojs.extend(VjsButton, {

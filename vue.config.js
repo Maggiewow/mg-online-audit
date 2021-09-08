@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-24 09:12:36
- * @LastEditTime: 2021-08-10 17:59:03
+ * @LastEditTime: 2021-09-08 17:55:47
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\vue.config.js
@@ -53,9 +53,9 @@ module.exports = {
       .rule('js')
       // .include.add('/packages')
       .include.add(resolve('src'))
-      .add(resolve('public/lib/canvastools'))
-      .add(resolve('public/lib/jwplayer-v6.1.2972'))
-      .add(resolve('public/lib/videojs'))
+      // .add(resolve('public/lib/canvastools'))
+      // .add(resolve('public/lib/jwplayer-v6.1.2972'))
+      // .add(resolve('public/lib/videojs'))
       .end()
       .use('babel')
       .loader('babel-loader')
