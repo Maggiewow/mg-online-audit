@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-09-08 15:38:32
+ * @LastEditTime: 2021-09-09 14:36:54
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\main.js
@@ -14,10 +14,10 @@ import store from './store';
 import config from '@/config';
 
 // import ElementUI from 'element-ui';
-// import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-chalk/index.css';
 // Vue.use(ElementUI);
 
-import ViewUI from 'view-design';
+// import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 // Vue.use(ViewUI);
 
@@ -29,9 +29,10 @@ import Es6Promise from 'es6-promise';
 require('es6-promise').polyfill();
 Es6Promise.polyfill();
 
+import { Message } from 'view-design';
 Vue.config.productionTip = false;
 Vue.prototype.$config = config;
-Vue.prototype.$Message = ViewUI.Message;
+Vue.prototype.$Message = Message;
 
 new Vue({
   router,
