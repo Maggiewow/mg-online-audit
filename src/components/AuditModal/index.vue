@@ -5,7 +5,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2021-09-09 10:18:02
+ * @LastEditTime: 2021-09-09 15:10:05
 -->
 <template>
   <div>
@@ -623,9 +623,7 @@ export default {
           if (res.status === 200 && file_id === this.fileId) {
             let { audits, basic, bindings, url, versions } = res.data.data;
             this.versionList = versions;
-            // 竖屏视频
-            url =
-              'https://stream7-transcode.iqilu.com/1/sucaiku/202104/28/ed24825f209642d789ef2d054459eab4.mp4';
+            // 竖屏视频 url = 'https://stream7-transcode.iqilu.com/1/sucaiku/202104/28/ed24825f209642d789ef2d054459eab4.mp4';
             // created_at file_duration file_name file_size file_type user
             if (!this.formItem.version || this.formItem.version === '0') {
               this.formItem.version = versions.length > 0 ? versions[0].version : '0';
