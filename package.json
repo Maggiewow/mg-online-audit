@@ -8,9 +8,12 @@
     "lib": "vue-cli-service build --target lib --name mg-online-audit --dest lib src/components/index.js"
   },
   "dependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.6",
     "axios": "^0.19.2",
     "canvas-arrow": "^1.1.1",
-    "core-js": "^3.6.5",
+    "core-js": "^2.6.12",
     "element-ui": "^2.12.0",
     "html2canvas": "^1.0.0-alpha.12",
     "iview": "^3.5.4",
