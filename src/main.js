@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-09-13 10:39:06
+ * @LastEditTime: 2021-09-13 16:43:17
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\main.js
@@ -17,9 +17,9 @@ import config from '@/config';
 import 'element-ui/lib/theme-chalk/index.css';
 // Vue.use(ElementUI);
 
-// import ViewUI from 'view-design';
+import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
-// Vue.use(ViewUI);
+Vue.use(ViewUI);
 
 import ZkTable from 'vue-table-with-tree-grid';
 Vue.use(ZkTable);
