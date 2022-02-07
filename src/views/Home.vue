@@ -1,16 +1,17 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-09-13 17:41:14
+ * @LastEditTime: 2022-02-07 15:23:57
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
 -->
 <template>
   <div class="comps">
-    <Button type="primary" :loading="loading1" @click="handleOpenVideo('13', null)"
+    <!-- 613  4842525  8255683 -->
+    <!-- <Button type="primary" :loading="loading1" @click="handleOpenVideo('8255683', null)"
       >打开弹窗</Button
-    >
+    > -->
     <audit-modal
       ref="auditDom"
       :fileId="fileId"

@@ -51,13 +51,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 "sass-loader": "^7.1.0",
 "vue-template-compiler": "^2.6.11"
 },
-09/09 删掉
-"babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-"devDependencies": {
-"@babel/core": "^7.6.0",
-"@babel/plugin-transform-runtime": "^7.6.0",
-"@babel/preset-env": "^7.15.0",
-}
 
 npm run lib
 git 提交

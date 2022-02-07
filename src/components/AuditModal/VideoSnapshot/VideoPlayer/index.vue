@@ -588,16 +588,21 @@ export default {
     align-items: center;
     justify-content: center;
     .text {
+      display: inline-block;
+      width: 100px;
       color: #fff;
-      text-align: right;
+      // text-align: right;
+      text-align: center;
     }
     &.right {
       justify-content: center;
     }
+    // 2022/02/07 改样式
     .slider {
       margin: 0 10px;
       // width: 68%;
-      width: 71%;
+      // width: 71%;
+      width: 580px;
       color: #fff;
     }
   }

@@ -5,7 +5,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2021-09-09 15:10:05
+ * @LastEditTime: 2022-02-07 15:24:57
 -->
 <template>
   <div>
@@ -405,8 +405,8 @@ import RelateManuModal from './RelateManuModal';
 import RelateSeriesModal from './RelateSeriesModal';
 import UpdateVersion from './UpdateVersion';
 import InfiniteLoading from 'vue-infinite-loading';
-
-import { setBase64toFile, downloadVideo, calcPercent } from './util';
+// downloadVideo
+import { setBase64toFile, downloadFile, calcPercent } from './util';
 import {
   Modal,
   Tabs,
@@ -1020,7 +1020,10 @@ export default {
           console.log('下载res', res && res.data.data.url, res.data.data);
           // 如果该时段内暂无相关内容 直接res为undefined 全局的297错误码拦截
           if (res && res.data.data.url) {
-            downloadVideo(res.data.data.url, this.playInfo.name);
+            // downloadVideo(res.data.data.url, this.playInfo.name);
+            let src = res.data.data.url + '?filename=' + this.playInfo.name;
+            console.log('downloadFile', src);
+            downloadFile(src);
           } else {
             this.$Message.warning(res.data.msg || '获取下载地址失败');
           }
