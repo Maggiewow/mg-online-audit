@@ -38,7 +38,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 修改记录：
 淘宝镜像 npm config set registry https://registry.npm.taobao.org
-不使用淘宝镜像 npm config set registry "http://registry.npmjs.org/"
+不使用淘宝镜像 npm config set registry=https://registry.npmjs.org
 
 "devDependencies": {
 "@vue/cli-plugin-babel": "^4.4.0",
