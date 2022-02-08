@@ -3,37 +3,37 @@
 </template>
 
 <script>
-import "@/assets/css/webuploader.css";
-import "@/assets/js/webupload.js";
-import { getToken } from "@/libs/util";
-import { uploadMD5 } from "@/api/common";
-import { uploadInit, uploadProcess, uploadFinish } from "@/api/webupload";
+import '@/assets/css/webuploader.css';
+import '@/assets/js/webupload.js';
+import { getToken } from '@/libs/util';
+import { uploadMD5 } from '@/api/common';
+import { uploadInit, uploadProcess, uploadFinish } from '@/api/webupload';
 export default {
-  name: "WebUpload",
+  name: 'WebUpload',
   props: {
     accept: {
       type: String,
-      default: null
+      default: null,
     },
     // 上传地址
     url: {
       type: String,
-      default: ""
+      default: '',
     },
     // 上传最大数量 默认为100
     fileNumLimit: {
       type: Number,
-      default: 100
+      default: 100,
     },
     // 大小限制 默认2M
     fileSingleSizeLimit: {
       type: Number,
-      default: 2048000
+      default: 2048000,
     },
     // 上传时传给后端的参数，一般为token，key等
     formData: {
       type: Object,
-      default: null
+      default: null,
     },
     // 生成formData中文件的key，下面只是个例子，具体哪种形式和后端商议
     keyGenerator: {
@@ -42,31 +42,31 @@ export default {
         const currentTime = new Date().getTime();
         const key = `${currentTime}`;
         return key;
-      }
+      },
     },
     multiple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 上传按钮ID
     uploadButton: {
       type: String,
-      default: ""
-    }
+      default: '',
+    },
   },
   data() {
     return {
       uploader: null,
-      md5: "",
-      uploadId: "",
+      md5: '',
+      uploadId: '',
       current_chunk: 0,
       current_finish: false,
-      uploader_index: 1
+      uploader_index: 1,
     };
   },
   mounted() {
-    this.uploader_index = sessionStorage.getItem("uploader_index")
-      ? sessionStorage.getItem("uploader_index")
+    this.uploader_index = sessionStorage.getItem('uploader_index')
+      ? sessionStorage.getItem('uploader_index')
       : 1;
     this.initWebUpload();
   },
@@ -76,63 +76,61 @@ export default {
 
       new WebUploader.Uploader.register(
         {
-          "before-send-file": "beforeSendFile",
-          "before-send": "beforeSend",
-          "after-send-file": "afterSendFile"
+          'before-send-file': 'beforeSendFile',
+          'before-send': 'beforeSend',
+          'after-send-file': 'afterSendFile',
         },
         {
           beforeSendFile: async function(file) {
             let deferred = WebUploader.Base.Deferred();
-            let file_md5 = "";
-            that.$emit("getMd5", file);
-            let current_uploader_index = sessionStorage.getItem(
-              "uploader_index"
-            )
-              ? sessionStorage.getItem("uploader_index")
+            let file_md5 = '';
+            that.$emit('getMd5', file);
+            let current_uploader_index = sessionStorage.getItem('uploader_index')
+              ? sessionStorage.getItem('uploader_index')
               : 1;
             if (that.uploader.options.index != current_uploader_index - 1) {
               return false;
             }
-            await that.uploader.md5File(file).then(val => {
+            await that.uploader.md5File(file).then((val) => {
               file_md5 = val;
             });
             let { ext, type } = file;
             let args = {
               ext,
               MIME_type: type,
-              file_md5
+              file_md5,
             };
             if (that.formData && that.formData.force_re_upload) {
               args.force_re_upload = that.formData.force_re_upload;
             }
             await uploadInit(args)
-              .then(res => {
+              .then((res) => {
                 if (res.status == 200) {
                   let { current_chunk, extra, status } = res.data.data;
-                  if (status === "1") {
+                  if (status === '1') {
                     file.current_chunk = res.data.data.current_chunk;
                     file.uploadId = res.data.data.uuid;
                     // that.uploadId = res.data.data.uuid
-                  } else if (status === "2") {
+                  } else if (status === '2') {
                     that.uploader.skipFile(file);
                     deferred.resolve();
                     that.current_finish = true;
                     let file_responent = {
                       headers: {
-                        state_code: 200
+                        state_code: 200,
                       },
                       data: {
                         data: {
-                          ...extra
+                          ...extra,
                         },
-                        msg: ""
-                      }
+                        msg: '',
+                      },
                     };
-                    that.$emit("success", file, file_responent);
+                    that.$emit('success', file, file_responent);
                   }
                 }
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
               });
           },
@@ -155,10 +153,8 @@ export default {
               that.current_finish = false;
               task.resolve();
             } else {
-              let current_uploader_index = sessionStorage.getItem(
-                "uploader_index"
-              )
-                ? sessionStorage.getItem("uploader_index")
+              let current_uploader_index = sessionStorage.getItem('uploader_index')
+                ? sessionStorage.getItem('uploader_index')
                 : 1;
               if (that.uploader.options.index != current_uploader_index - 1) {
                 return false;
@@ -166,20 +162,25 @@ export default {
               // that.uploader.md5File(file).then(val => {
               // console.log(file.uploadId)
               let params = {
-                uuid: file.uploadId
+                uuid: file.uploadId,
                 // file_MD5: val
               };
               uploadFinish(params)
-                .then(res => {
+                .then((res) => {
                   let { data, status } = res;
                   if (status === 200) {
-                    that.$emit("success", file, res);
+                    that.$emit('success', file, {
+                      ...res,
+                      headers: {
+                        state_code: 200,
+                      },
+                    });
                   } else {
                     console.log(data);
                   }
                   task.resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   task.resolve();
                   // that.$Message.error(err)
                 });
@@ -187,19 +188,19 @@ export default {
             }
 
             return $.when(task);
-          }
+          },
         }
       );
 
       that.uploader = WebUploader.create({
         sendMd5: true,
         auto: true, // 选完文件后，是否自动上传
-        swf: "/static/lib/webuploader/Uploader.swf", // swf文件路径
+        swf: '/static/lib/webuploader/Uploader.swf', // swf文件路径
         server: that.url, // 文件接收服务端
         pick: {
           id: that.uploadButton, // 选择文件的按钮
           multiple: that.multiple, // 是否多文件上传 默认false
-          label: ""
+          label: '',
         },
         accept: that.getAccept(that.accept), // 允许选择文件格式。
         threads: 5,
@@ -210,77 +211,76 @@ export default {
         chunkSize: 10 * 1024 * 1024, // 分片大小5 * 1024 * 1024
         duplicate: true, // 去重， 根据文件名字、文件大小和最后修改时间来生成hash Key.
         chunkRetry: 2, // 重试次数
-        index: that.uploader_index
+        index: that.uploader_index,
       });
-      sessionStorage.setItem("uploader_index", Number(that.uploader_index) + 1);
+      sessionStorage.setItem('uploader_index', Number(that.uploader_index) + 1);
       // 当有文件被添加进队列的时候，添加到页面预览
-      that.uploader.on("fileQueued", file => {
-        that.$emit("fileChange", file);
+      that.uploader.on('fileQueued', (file) => {
+        that.$emit('fileChange', file);
         // that.uploader.options.formData["key"] = that.keyGenerator(file);
       });
 
-      that.uploader.on("uploadStart", file => {
+      that.uploader.on('uploadStart', (file) => {
         // 在这里可以准备好formData的数据
         // that.uploader.options.formData.key = 1;
         // let uuid = new Date().getTime() + Math.floor(Math.random() * 1000)
         // that.uploader.options.formData = { uuid }
-        console.log("file", file);
+        console.log('file', file);
       });
 
-      that.uploader.on("uploadBeforeSend", (object, data, headers) => {
+      that.uploader.on('uploadBeforeSend', (object, data, headers) => {
         // console.log(object);
         // data.uid = that.$store.state.userId
         data.token = getToken();
         headers.token = getToken();
-        headers.platform = "PC";
+        headers.platform = 'PC';
         // headers.FileType = object.blob.type
         data.uuid = object.file.uploadId;
       });
 
-      that.uploader.on("uploadgetMd5Before", file => {
-        console.log("getmd5开始：", new Date());
-        that.$emit("getMd5Before", file);
+      that.uploader.on('uploadgetMd5Before', (file) => {
+        console.log('getmd5开始：', new Date());
+        that.$emit('getMd5Before', file);
       });
-      that.uploader.on("uploadgetMd5Done", md5 => {
-        console.log("getmd5结束：", md5);
-        that.$emit("getMd5Done", md5);
+      that.uploader.on('uploadgetMd5Done', (md5) => {
+        console.log('getmd5结束：', md5);
+        that.$emit('getMd5Done', md5);
       });
 
-      that.uploader.on("uploadAccept", (obj, res) => {
+      that.uploader.on('uploadAccept', (obj, res) => {
         // console.log(obj,res)
       });
 
       // 文件上传过程中创建进度条实时显示。
-      that.uploader.on("uploadProgress", (file, percentage) => {
-        that.$emit("progress", file, percentage);
+      that.uploader.on('uploadProgress', (file, percentage) => {
+        that.$emit('progress', file, percentage);
       });
 
-      that.uploader.on("uploadSuccess", (file, response) => {
+      that.uploader.on('uploadSuccess', (file, response) => {
         // that.$emit('success', file, response)
       });
 
-      that.uploader.on("uploadError", (file, reason) => {
-        that.$emit("uploadError", file, reason);
+      that.uploader.on('uploadError', (file, reason) => {
+        that.$emit('uploadError', file, reason);
       });
 
-      that.uploader.on("error", type => {
-        let errorMessage = "";
-        if (type === "F_EXCEED_SIZE") {
-          errorMessage = `文件大小不能超过${that.fileSingleSizeLimit /
-            (1024 * 1000)}M`;
-        } else if (type === "Q_EXCEED_NUM_LIMIT") {
-          errorMessage = "文件上传已达到最大上限数";
-        } else if (type === "Q_TYPE_DENIED") {
+      that.uploader.on('error', (type) => {
+        let errorMessage = '';
+        if (type === 'F_EXCEED_SIZE') {
+          errorMessage = `文件大小不能超过${that.fileSingleSizeLimit / (1024 * 1000)}M`;
+        } else if (type === 'Q_EXCEED_NUM_LIMIT') {
+          errorMessage = '文件上传已达到最大上限数';
+        } else if (type === 'Q_TYPE_DENIED') {
           errorMessage = `上传出错！请检查上传类型`;
         } else {
           errorMessage = `上传出错！请检查后重新上传！错误代码${type}`;
         }
 
-        that.$emit("error", errorMessage);
+        that.$emit('error', errorMessage);
       });
 
-      that.uploader.on("uploadComplete", (file, response) => {
-        that.$emit("complete", file, response);
+      that.uploader.on('uploadComplete', (file, response) => {
+        that.$emit('complete', file, response);
       });
     },
 
@@ -302,7 +302,7 @@ export default {
       // this.uploader.destroy()
     },
     concat(array, str) {
-      let arr = str.split(",");
+      let arr = str.split(',');
       arr.map(function(value) {
         array = array.concat(value);
       });
@@ -313,48 +313,45 @@ export default {
       let title = [];
       let extensions = [];
       let mimeTypes = [];
-      if (accept.search("image") != -1) {
-        title = title.concat("image");
-        extensions = this.concat(extensions, "gif,jpg,png,jpeg");
-        mimeTypes = this.concat(mimeTypes, "image/gif,image/jpeg,image/png");
+      if (accept.search('image') != -1) {
+        title = title.concat('image');
+        extensions = this.concat(extensions, 'gif,jpg,png,jpeg');
+        mimeTypes = this.concat(mimeTypes, 'image/gif,image/jpeg,image/png');
       }
-      if (accept.search("video") != -1) {
-        title = title.concat("Videos");
-        extensions = this.concat(extensions, "mp4,mxf");
-        mimeTypes = this.concat(mimeTypes, "video/mp4", "application/mxf");
+      if (accept.search('video') != -1) {
+        title = title.concat('Videos');
+        extensions = this.concat(extensions, 'mp4,mxf');
+        mimeTypes = this.concat(mimeTypes, 'video/mp4', 'application/mxf');
       }
-      if (accept.search("text") != -1) {
-        title = title.concat("texts");
-        extensions = this.concat(extensions, "txt,doc,docx");
+      if (accept.search('text') != -1) {
+        title = title.concat('texts');
+        extensions = this.concat(extensions, 'txt,doc,docx');
         mimeTypes = this.concat(
           mimeTypes,
-          "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          'text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         );
       }
-      if (accept.search("voice") != -1) {
-        title = title.concat("Voicess");
-        extensions = this.concat(extensions, "mp3,wav");
-        mimeTypes = this.concat(mimeTypes, "voice/mp3");
+      if (accept.search('voice') != -1) {
+        title = title.concat('Voicess');
+        extensions = this.concat(extensions, 'mp3,wav');
+        mimeTypes = this.concat(mimeTypes, 'voice/mp3');
       }
-      if (accept.search("all") != -1) {
-        title = title.concat("All");
-        extensions = this.concat(
-          extensions,
-          "gif,jpg,png,jpeg,mp3,wav,txt,doc,docx,mp4,mxf"
-        );
+      if (accept.search('all') != -1) {
+        title = title.concat('All');
+        extensions = this.concat(extensions, 'gif,jpg,png,jpeg,mp3,wav,txt,doc,docx,mp4,mxf');
         mimeTypes = this.concat(
           mimeTypes,
-          "image/gif,image/jpeg,image/png,voice/mp3,video/mp4",
-          "application/mxf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          'image/gif,image/jpeg,image/png,voice/mp3,video/mp4',
+          'application/mxf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         );
       }
       return {
-        title: title.join(","),
-        extensions: extensions.join(","),
-        mimeTypes: mimeTypes.join(",")
+        title: title.join(','),
+        extensions: extensions.join(','),
+        mimeTypes: mimeTypes.join(','),
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

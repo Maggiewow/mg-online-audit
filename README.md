@@ -52,6 +52,10 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 "vue-template-compiler": "^2.6.11"
 },
 
+去掉
+"html2canvas": "^1.0.0-alpha.12",
+"vue-video-player": "^5.0.2",
+
 npm run lib
 git 提交
 npm version patch

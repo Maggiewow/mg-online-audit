@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2022-02-07 15:23:57
+ * @LastEditTime: 2022-02-08 14:35:30
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -9,9 +9,7 @@
 <template>
   <div class="comps">
     <!-- 613  4842525  8255683 -->
-    <!-- <Button type="primary" :loading="loading1" @click="handleOpenVideo('8255683', null)"
-      >打开弹窗</Button
-    > -->
+    <Button type="primary" :loading="loading1" @click="handleOpenVideo('6', null)">打开弹窗</Button>
     <audit-modal
       ref="auditDom"
       :fileId="fileId"
@@ -40,7 +38,7 @@ export default {
         avatar: 'https://img12.iqilu.com//1/2019/09/03/d263847adf8b4835acb1dee6c057f32f.jpg',
         nickname: '赵婷婷',
       },
-      privList: ['bindSeries'], // ['bindSeries', 'bindArticle', 'updateVersion']
+      privList: ['bindSeries', 'bindArticle', 'updateVersion'], // ['bindSeries', 'bindArticle', 'updateVersion']
     };
   },
   mounted() {},
