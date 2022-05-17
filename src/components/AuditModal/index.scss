@@ -1,25 +1,30 @@
 .title-opr-line {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  // justify-content: flex-end;
-  align-items: flex-start;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: flex-start;
 }
 
 .weight-title {
   width: 780px;
-  margin-top: 30px;
+  // margin-top: 30px;
+  // line-height: 20px;
+  margin: 5px;
   font-size: 18px;
   font-weight: bold;
-  line-height: 20px;
+  line-height: 30px;
 }
 
 .set-form {
-  /* width: 100%;*/
-  width: 350px;
+  width: 100%;
+  // width: 350px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  .ivu-form-item {
+    margin-bottom: 4px;
+  }
 
   .per-sel {
     width: 100px;

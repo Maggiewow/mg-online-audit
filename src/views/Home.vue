@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2022-02-08 14:35:30
+ * @LastEditTime: 2022-05-17 17:14:35
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -9,13 +9,22 @@
 <template>
   <div class="comps">
     <!-- 613  4842525  8255683 -->
-    <Button type="primary" :loading="loading1" @click="handleOpenVideo('6', null)">打开弹窗</Button>
+    <Button type="primary" :loading="loading1" @click="handleOpenVideo('111')">打开弹窗</Button>
     <audit-modal
       ref="auditDom"
       :fileId="fileId"
       :userInfo="userInfo"
       :privList="privList"
-    ></audit-modal>
+      :fromSeries="true"
+    >
+      <template #toolbar>
+        <Button type="info" size="small" class="per-btn" @click="handleChangeFile">上一条</Button>
+        <Button type="info" size="small" class="per-btn" @click="handleChangeFile">下一条</Button>
+        <Button type="success" size="small" class="per-btn">更新版本</Button>
+        <Button type="success" size="small" class="per-btn">通过</Button>
+        <Button type="error" size="small" class="per-btn">修改驳回</Button>
+      </template>
+    </audit-modal>
   </div>
 </template>
 
@@ -38,7 +47,7 @@ export default {
         avatar: 'https://img12.iqilu.com//1/2019/09/03/d263847adf8b4835acb1dee6c057f32f.jpg',
         nickname: '赵婷婷',
       },
-      privList: ['bindSeries', 'bindArticle', 'updateVersion'], // ['bindSeries', 'bindArticle', 'updateVersion']
+      privList: [], // ['bindSeries', 'bindArticle', 'updateVersion']
     };
   },
   mounted() {},
@@ -52,6 +61,11 @@ export default {
           this.loading1 = false;
         });
       });
+    },
+    // 111 108
+    handleChangeFile() {
+      this.fileId = '108';
+      this.$refs.auditDom.fileChange();
     },
   },
 };

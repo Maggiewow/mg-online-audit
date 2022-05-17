@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import { Input } from 'view-design';
 import 'canvas-arrow';
 
 export default {
@@ -139,7 +140,7 @@ export default {
       remarkContent: '',
     };
   },
-  created() {},
+  components: { Input },
   mounted() {
     this.canvas = document.getElementById('ImageDraw');
     this.context = this.canvas.getContext('2d');
@@ -430,8 +431,6 @@ export default {
       });
     },
     saveDrawImage() {
-      // this.remarkContent
-      console.log('saveDrawImage====', this.remarkContent);
       this.imageBase64 = this.canvas.toDataURL('image/png');
       this.$emit('getDrawImage', this.imageBase64, this.remarkContent || '');
       this.drawContextDisplay = false;

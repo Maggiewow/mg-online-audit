@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2021-09-13 16:58:09
+ * @LastEditTime: 2022-05-17 16:29:35
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\main.js
@@ -28,10 +28,11 @@ import Es6Promise from 'es6-promise';
 require('es6-promise').polyfill();
 Es6Promise.polyfill();
 
-import { Message } from 'view-design';
+import { Message, Modal } from 'view-design';
 Vue.config.productionTip = false;
 Vue.prototype.$config = config;
 Vue.prototype.$Message = Message;
+Vue.prototype.$Modal = Modal;
 
 new Vue({
   router,
