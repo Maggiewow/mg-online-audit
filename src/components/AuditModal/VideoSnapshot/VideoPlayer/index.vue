@@ -57,19 +57,12 @@ import $ from 'jquery';
 import videojs from 'video.js';
 
 export default {
-  components: {
-    ImageDraw,
-    'el-row': Row,
-    'el-col': Col,
-    'el-slider': Slider,
-    Loading,
-  },
   name: 'VideoPlayer',
-
   props: {
-    url: {
-      type: String,
-      required: false,
+    // 串联单：稿件创建人只能更新版本 没有批注权限
+    noCommentAccess: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -138,6 +131,13 @@ export default {
       },
       isFullscreen: false, // 是否为全屏状态
     };
+  },
+  components: {
+    ImageDraw,
+    'el-row': Row,
+    'el-col': Col,
+    'el-slider': Slider,
+    Loading,
   },
   watch: {
     videoPlayerIsShow(bool) {
@@ -389,6 +389,11 @@ export default {
      * 发起截图 处于批注模式 全部内容加上蒙层
      */
     async handleMark() {
+      if (this.noCommentAccess) {
+        console.log('禁止批注');
+        return;
+      }
+
       this.$emit('getCurrentVideoMode', !this.videoPlayerIsShow);
       if (this.videoPlayerIsShow) {
         let _self = this;

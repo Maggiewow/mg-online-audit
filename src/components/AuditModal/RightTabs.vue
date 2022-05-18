@@ -3,7 +3,14 @@
     <TabPane :label="`批注（${commentCount}）`" name="1">
       <Form class="com-form" :model="commentItem" :label-width="0">
         <FormItem label="">
-          <Button type="success" size="small" class="per-btn" @click="handleShot">插入批注</Button>
+          <Button
+            type="success"
+            size="small"
+            class="per-btn"
+            :disabled="noCommentAccess"
+            @click="handleShot"
+            >插入批注</Button
+          >
         </FormItem>
         <!-- order_type sort_type is_resolve -->
         <FormItem label="" prop="type" class="per-sel">
@@ -235,6 +242,11 @@ export default {
     basicInfo: {
       type: Object,
       default: {},
+    },
+    // 串联单：稿件创建人只能更新版本 没有批注权限
+    noCommentAccess: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

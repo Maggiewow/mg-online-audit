@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2022-05-17 17:14:35
+ * @LastEditTime: 2022-05-18 09:59:53
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -20,7 +20,9 @@
       <template #toolbar>
         <Button type="info" size="small" class="per-btn" @click="handleChangeFile">上一条</Button>
         <Button type="info" size="small" class="per-btn" @click="handleChangeFile">下一条</Button>
-        <Button type="success" size="small" class="per-btn">更新版本</Button>
+        <Button type="success" size="small" class="per-btn" @click="handleNewVersion"
+          >更新版本</Button
+        >
         <Button type="success" size="small" class="per-btn">通过</Button>
         <Button type="error" size="small" class="per-btn">修改驳回</Button>
       </template>
@@ -41,6 +43,7 @@ export default {
   data() {
     return {
       loading1: false,
+      noCommentAccess: false,
       fileId: '',
       userInfo: {
         id: '1000053',
@@ -66,6 +69,9 @@ export default {
     handleChangeFile() {
       this.fileId = '108';
       this.$refs.auditDom.fileChange();
+    },
+    handleNewVersion() {
+      this.$refs.auditDom.handleUpdateVersion();
     },
   },
 };

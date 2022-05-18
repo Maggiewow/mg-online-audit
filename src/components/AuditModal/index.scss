@@ -532,6 +532,12 @@
 }
 
 .modal-con {
+
+  .ivu-modal-mask,
+  .ivu-modal-wrap {
+    z-index: 1002 !important;
+  }
+
   ::v-deep .ivu-modal-body {
     position: relative;
   }
@@ -546,4 +552,10 @@
     height: 100%;
     z-index: 90;
   }
+}
+
+.red-tips {
+  color: red;
+  line-height: 30px;
+  font-size: 14px;
 }

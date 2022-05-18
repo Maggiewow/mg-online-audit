@@ -4,7 +4,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 10:14:58
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2021-07-01 17:54:45
+ * @LastEditTime: 2022-05-18 09:53:00
 -->
 
 <template>
@@ -13,6 +13,7 @@
       <!-- 播放器 -->
       <video-player
         ref="videoPlayer"
+        :noCommentAccess="noCommentAccess"
         @getCutImg="getMarkImage"
         @getCurrentVideoMode="getCurrentVideoMode"
         @allCounts="allCounts"
@@ -22,92 +23,82 @@
 </template>
 
 <script>
-import VideoPlayer from './VideoPlayer'
+import VideoPlayer from './VideoPlayer';
 export default {
-  components: { VideoPlayer },
-  data () {
+  name: 'VideoSnapshot',
+  props: {
+    // 串联单：稿件创建人只能更新版本 没有批注权限
+    noCommentAccess: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
     return {
       currentVideoIsEdit: false,
       pWidth: 0,
       pHeight: 0,
       submitList: [],
       currentId: null,
-      playInfo: {}
-    }
+      playInfo: {},
+    };
   },
-  // props: {
-  //   playInfo: {
-  //     required: true,
-  //     default: {
-  //       id: null,
-  //       name: "",
-  //       url: ""
-  //     }
-  //   }
-  // },
-  mounted () {
-    let bH = document.body.offsetHeight
-    let videoPlayer = document.getElementsByClassName('video-player')
-    this.pHeight = videoPlayer[0].offsetHeight
-    this.pWidth = videoPlayer[0].offsetWidth
+  components: { VideoPlayer },
+  mounted() {
+    let bH = document.body.offsetHeight;
+    let videoPlayer = document.getElementsByClassName('video-player');
+    this.pHeight = videoPlayer[0].offsetHeight;
+    this.pWidth = videoPlayer[0].offsetWidth;
 
     // this.setSource(); // 父组件主动触发
   },
   methods: {
-    handleMark () {
-      this.$refs.videoPlayer.handleMark()
+    handleMark() {
+      this.$refs.videoPlayer.handleMark();
     },
-    pauseVideo () {
-      this.$refs.videoPlayer.pauseVideo()
+    pauseVideo() {
+      this.$refs.videoPlayer.pauseVideo();
     },
-    setSource (obj) {
-      this.playInfo = obj
+    setSource(obj) {
+      this.playInfo = obj;
       if (!this.playInfo.id) {
-        this.$message.error('暂无视频信息')
-        return
+        this.$message.error('暂无视频信息');
+        return;
       }
 
-      this.currentId = this.playInfo.id
+      this.currentId = this.playInfo.id;
       if (this.currentVideoIsEdit) {
-        this.$message.error('处于视频标注模式')
+        this.$message.error('处于视频标注模式');
       } else {
-        this.$refs.videoPlayer.initVideoUrl(
-          this.playInfo,
-          this.pWidth,
-          this.pHeight
-        )
+        this.$refs.videoPlayer.initVideoUrl(this.playInfo, this.pWidth, this.pHeight);
       }
     },
     // 弃用
     // 点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
-    initSource (projectList, index, projectLists) {
-      this.currentId = projectList[0].id
-      this.submitList = [...projectLists]
+    initSource(projectList, index, projectLists) {
+      this.currentId = projectList[0].id;
+      this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
-        this.$message.error('处于视频标注模式')
+        this.$message.error('处于视频标注模式');
       } else {
-        console.log('playInfo', this.playInfo)
-        this.$refs.videoPlayer.initVideoUrl(
-          this.playInfo,
-          this.pWidth,
-          this.pHeight
-        )
-        this.$refs.videoPlayer.initNextVideo(index, projectList)
+        console.log('playInfo', this.playInfo);
+        this.$refs.videoPlayer.initVideoUrl(this.playInfo, this.pWidth, this.pHeight);
+        this.$refs.videoPlayer.initNextVideo(index, projectList);
       }
     },
-    getMarkImage (obj) {
-      this.$emit('get-image-list', obj)
-      let bH = document.body.offsetHeight
+    getMarkImage(obj) {
+      this.$emit('get-image-list', obj);
+      let bH = document.body.offsetHeight;
     },
     // 传递 获取视频是否属于编辑中
-    getCurrentVideoMode (mode) {
-      this.currentVideoIsEdit = !mode
+    getCurrentVideoMode(mode) {
+      this.currentVideoIsEdit = !mode;
     },
-    allCounts (duration, frame) {
-      this.$emit('allCounts', duration, frame)
-    }
-  }
-}
+    allCounts(duration, frame) {
+      this.$emit('allCounts', duration, frame);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -5,7 +5,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-17 17:35:57
+ * @LastEditTime: 2022-05-18 16:24:23
 -->
 <template>
   <div>
@@ -95,7 +95,12 @@
       <div class="audit-box">
         <div class="left-col">
           <!-- <h2 class="video-title">{{ playInfo.name || "" }}</h2> -->
-          <VideoSnapshot ref="videoshot" @get-image-list="handleVideoShot" @allCounts="allCounts" />
+          <VideoSnapshot
+            ref="videoshot"
+            :noCommentAccess="noCommentAccess"
+            @get-image-list="handleVideoShot"
+            @allCounts="allCounts"
+          />
 
           <div class="progress-bar">
             <p class="time-show">0帧 / 00:00</p>
@@ -124,6 +129,7 @@
             </div>
             <p class="time-show">{{ durationCount.frame }}帧 / {{ durationCount.duration }}</p>
           </div>
+          <p class="red-tips" v-if="transcodeing">新版本视频转码中，请稍后...</p>
           <div class="main-article" v-if="!fromSeries">
             <Tabs v-model="articleKey">
               <TabPane label="文稿" name="1"> </TabPane
@@ -177,6 +183,7 @@
             :version="String(formItem.version)"
             :seriesList="seriesList"
             :basicInfo="basicInfo"
+            :noCommentAccess="noCommentAccess"
             @startMark="handleShot"
             @removeFrame="handleRemoveFrame"
           />
@@ -203,6 +210,9 @@
       @chooseDraftOk="confirmUpdate"
       @chooseDraftCancel="cancelUpdate"
     ></update-version>
+    <!-- 重新用一个上传组件 调用转码 审片用的是转码视频，通过之后是原视频 -->
+    <!-- 创建人-更新版本-上传 没有批注功能；审核人-批注 没有更新版本功能 -->
+    <sucai-upload ref="uploadDom" @setTranscodeStatus="setTranscode" @uploadOk="setVideoUrl" />
   </div>
 </template>
 
@@ -220,6 +230,7 @@ import RelateManuModal from './RelateManuModal';
 import RelateSeriesModal from './RelateSeriesModal';
 import UpdateVersion from './UpdateVersion';
 import RightTabs from './RightTabs';
+import SucaiUpload from '@/components/SucaiUpload';
 import InfiniteLoading from 'vue-infinite-loading';
 // downloadVideo
 import { setBase64toFile, downloadFile, calcPercent } from './util';
@@ -261,6 +272,7 @@ export default {
     RelateSeriesModal,
     UpdateVersion,
     RightTabs,
+    SucaiUpload,
     InfiniteLoading,
     Modal,
     Tabs,
@@ -308,6 +320,7 @@ export default {
       bindArticles: [],
       bindSerieArticles: [],
       bindSeriesInfo: [], // id列表
+      transcodeing: false,
     };
   },
   props: {
@@ -332,10 +345,15 @@ export default {
       type: Boolean,
       default: false,
     },
-    // 如果是串联单的审片 传入稿件内容
+    // 串联单审片：传入稿件内容
     seriesArticleContent: {
       type: String,
       default: '',
+    },
+    // 串联单：稿件创建人只能更新版本 没有批注权限
+    noCommentAccess: {
+      type: Boolean,
+      default: false,
     },
   },
   watch: {
@@ -601,10 +619,6 @@ export default {
           }, 500);
         });
     },
-    handleUpdateVersion() {
-      this.uploadModal = true;
-      this.$refs.upVersion.openModal();
-    },
     // 关联文稿
     handleChooseManu() {
       this.manuModal = true;
@@ -657,27 +671,6 @@ export default {
         }
       });
     },
-    confirmUpdate(file, callback) {
-      console.log('确认', file);
-      updateSucaiVersion(this.fileId, file.url)
-        .then((res) => {
-          if (res.status === 200) {
-            const { version } = res.data.data;
-            this.$Message.success(res.data.msg || '版本更新成功');
-            this.uploadModal = false;
-            this.formItem.version = version;
-            this.getDetail();
-          } else {
-            this.$Message.error(res.data.msg || '版本更新失败');
-          }
-        })
-        .finally(() => {
-          callback && callback();
-        });
-    },
-    cancelUpdate() {
-      this.uploadModal = false;
-    },
     handleDeleteVersion() {
       this.$Modal.confirm({
         title: '删除',
@@ -711,6 +704,78 @@ export default {
             });
         },
       });
+    },
+    handleUpdateVersion() {
+      if (this.fromSeries) {
+        this.seriesUpdateVersion();
+        return;
+      }
+
+      this.uploadModal = true;
+      this.$refs.upVersion.openModal();
+    },
+    seriesUpdateVersion() {
+      this.$refs.uploadDom.uploadVideo();
+    },
+    setTranscode(status, cover = null) {
+      console.log('转码状态', status, cover);
+      this.transcodeing = status;
+      this.transcodeCover = cover;
+    },
+    setVideoUrl(transcodeOk, file) {
+      console.log('视频地址', transcodeOk, file);
+
+      // 转码成功之前 原地址保存一下
+      !transcodeOk && this.confirmSave(file);
+      // 更新版本的接口 是转码后地址
+      transcodeOk && this.confirmUpdate(file);
+    },
+    // 上传完成 转码中 调用素材库接口保存信息
+    confirmSave(file) {
+      console.log('保存', file);
+      this.playInfo.url = file.url;
+      this.$refs.videoshot.setSource(this.playInfo);
+      let initVersion = parseInt(this.formItem.version);
+      let newVersion = String(initVersion + 1);
+      this.versionList.push({ version: newVersion });
+      this.formItem.version = newVersion;
+      return;
+
+      updateSucaiVersion(this.fileId, file.url)
+        .then((res) => {
+          if (res.status === 200) {
+            const { version } = res.data.data;
+            this.$Message.success(res.data.msg || '视频保存成功');
+            this.formItem.version = version;
+            this.getDetail();
+          } else {
+            this.$Message.error(res.data.msg || '视频保存失败');
+          }
+        })
+        .finally(() => {
+          callback && callback();
+        });
+    },
+    // TODO 用转码后的地址更新版本 接口报错
+    confirmUpdate(file, callback) {
+      console.log('确认', file);
+      updateSucaiVersion(this.fileId, file.url)
+        .then((res) => {
+          if (res.status === 200) {
+            const { version } = res.data.data;
+            this.$Message.success(res.data.msg || '版本更新成功');
+            this.formItem.version = version;
+            this.getDetail();
+          } else {
+            this.$Message.error(res.data.msg || '版本更新失败');
+          }
+        })
+        .finally(() => {
+          callback && callback();
+        });
+    },
+    cancelUpdate() {
+      this.uploadModal = false;
     },
   },
 };
