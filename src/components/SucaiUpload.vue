@@ -28,8 +28,6 @@ export default {
       fileLimitNum: 1,
       modalType: 'video',
       transcodeing: false,
-      transcodeCover:
-        'https://img12.iqilu.com/10339/sucaiku/202008/19/d1fe0b3a210d30c63618e00824adf714.png',
       ws_transcode: null,
       wsInterval_transcode: null,
     };
@@ -54,7 +52,7 @@ export default {
       }
       this.initTranscodeWs(id);
       this.transcodeing = true;
-      this.$emit('setTranscodeStatus', this.transcodeing, this.transcodeCover);
+      this.$emit('setTranscodeStatus', this.transcodeing);
     },
     initTranscodeWs(id) {
       let _this = this;

@@ -1,11 +1,13 @@
 <!--
  * @文件描述: 在线审片弹窗
-  【腾讯文档】在线审片测试问题 https://docs.qq.com/doc/DREhZZFZuWmFORnZy
+  加入串联单审片功能之后 组件间耦合度变高
+  1. 创建者更新版本后 转码未完成：不可批注；如果mxf，不能播放；
+  2. 审核人 点开审核，如果转码未完成：不可批注
  * @公司: 广电信通
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-18 16:24:23
+ * @LastEditTime: 2022-05-20 14:20:18
 -->
 <template>
   <div>
@@ -96,13 +98,20 @@
         <div class="left-col">
           <!-- <h2 class="video-title">{{ playInfo.name || "" }}</h2> -->
           <VideoSnapshot
+            v-show="!isMXFUrl"
             ref="videoshot"
-            :noCommentAccess="noCommentAccess"
+            :hideComment="noCommentAccess || !isTranscodeUrl"
             @get-image-list="handleVideoShot"
             @allCounts="allCounts"
           />
-
-          <div class="progress-bar">
+          <img
+            v-if="!isTranscodeUrl && isMXFUrl"
+            class="default-img"
+            :src="transcodeCover"
+            alt=""
+          />
+          <!-- 显示批注节点的进度条 未转码视频不能批注 所以不展示 -->
+          <div class="progress-bar" v-if="isTranscodeUrl">
             <p class="time-show">0帧 / 00:00</p>
             <div class="slider-line">
               <el-slider :value="100" disabled></el-slider>
@@ -129,11 +138,21 @@
             </div>
             <p class="time-show">{{ durationCount.frame }}帧 / {{ durationCount.duration }}</p>
           </div>
-          <p class="red-tips" v-if="transcodeing">新版本视频转码中，请稍后...</p>
-          <div class="main-article" v-if="!fromSeries">
+
+          <div class="main-article" v-if="fromSeries">
+            <div class="red-tips" v-if="transcodeing">*视频转码中，请稍后...</div>
+            <div class="red-tips" v-else-if="!isTranscodeUrl">
+              <span>*视频转码中，请稍后刷新重试&ensp;</span>
+              <Button :loading="isLoading" size="small" @click="() => getDetail()">刷新</Button>
+            </div>
+            <!-- 文稿内容 -->
+            <Tabs><TabPane label="文稿" name="1"></TabPane></Tabs>
+            <div class="content-text" v-html="seriesArticleContent"></div>
+          </div>
+          <div class="main-article" v-else>
             <Tabs v-model="articleKey">
-              <TabPane label="文稿" name="1"> </TabPane
-              ><TabPane label="串联单文稿" name="2"> </TabPane>
+              <TabPane label="文稿" name="1"></TabPane>
+              <TabPane label="串联单文稿" name="2"></TabPane>
             </Tabs>
             <ul>
               <li class="article-col" v-for="(item, index) in displayList" :key="item.id">
@@ -168,10 +187,6 @@
               </p>
             </ul>
           </div>
-          <div class="main-article" v-else>
-            <!-- 文稿内容 -->
-            <div class="content-text" v-html="seriesArticleContent"></div>
-          </div>
         </div>
 
         <div class="right-col">
@@ -180,10 +195,10 @@
             :fileId="fileId"
             :userInfo="userInfo"
             :fromSeries="fromSeries"
-            :version="String(formItem.version)"
+            :version="formItem.version"
             :seriesList="seriesList"
             :basicInfo="basicInfo"
-            :noCommentAccess="noCommentAccess"
+            :hideComment="noCommentAccess || !isTranscodeUrl"
             @startMark="handleShot"
             @removeFrame="handleRemoveFrame"
           />
@@ -303,6 +318,7 @@ export default {
       manuModal: false,
       seriesModal: false,
       uploadModal: false,
+      isLoading: false,
       playInfo: {
         id: null,
         name: '',
@@ -321,6 +337,9 @@ export default {
       bindSerieArticles: [],
       bindSeriesInfo: [], // id列表
       transcodeing: false,
+      transcodeCover:
+        'https://img12.iqilu.com/10339/sucaiku/202008/19/d1fe0b3a210d30c63618e00824adf714.png',
+      urlNotAvailable: false, // 视频地址不可用 转码中图片
     };
   },
   props: {
@@ -374,6 +393,15 @@ export default {
     curUserId() {
       return this.userInfo.id || '';
     },
+    isTranscodeUrl() {
+      // https://stream7.shandian8.com/1/sucaiku/202205/17/011311e6f6064e849b1167ed9f9b13c1.mp4
+      // https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4
+      return this.playInfo.url.startsWith('https://stream7-transcode.iqilu.com');
+    },
+    // 无法播放的视频格式 只能用转码封面替代视频标签展示
+    isMXFUrl() {
+      return this.playInfo.url.endsWith('.mxf');
+    },
   },
   methods: {
     fileChange(version = '0') {
@@ -392,7 +420,7 @@ export default {
         url: '',
       };
       this.getDetail();
-      this.$refs.rightDom.resetHistory();
+      // this.$refs.rightDom.resetHistory();
     },
     showModal(cb) {
       // 主要用于关闭列表中视频的加载状态
@@ -409,26 +437,29 @@ export default {
     },
     // 几种情形 1.打开弹窗 2.下拉选择 3.更新版本
     getDetail(callback) {
+      this.isLoading = true;
       let initVersion = String(this.formItem.version);
       let file_id = this.fileId;
 
       getSucaiVersionDetail(file_id, initVersion)
         .then((res) => {
-          console.log('打开弹窗1res.data', res.data);
           if (res.data.msg && res.data.msg.msg && res.data.msg.msg === '登录过期') {
             this.$Message.warning('登录过期，请重试');
-            callback && callback();
+
             return;
           }
 
           if (res.status === 200 && file_id === this.fileId) {
             let { audits, basic, bindings, url, versions } = res.data.data;
             this.versionList = versions;
+            this.formItem.version = initVersion;
+
             // 竖屏视频 url = 'https://stream7-transcode.iqilu.com/1/sucaiku/202104/28/ed24825f209642d789ef2d054459eab4.mp4';
             // created_at file_duration file_name file_size file_type user
             if (!initVersion || initVersion === '0') {
               let lastestVersion = versions.length > 0 ? versions[0].version : '0';
               this.$set(this.formItem, 'version', lastestVersion);
+              this.formItem.version = lastestVersion;
             }
 
             setTimeout(() => {
@@ -459,12 +490,14 @@ export default {
               }
             );
             this.auditModal = true;
-            callback && callback();
           }
         })
         .catch((err) => {
           console.log('打开弹窗失败', err);
+        })
+        .finally(() => {
           callback && callback();
+          this.isLoading = false;
         });
     },
     getArticles() {
@@ -707,64 +740,33 @@ export default {
     },
     handleUpdateVersion() {
       if (this.fromSeries) {
-        this.seriesUpdateVersion();
-        return;
+        this.$refs.uploadDom.uploadVideo();
+      } else {
+        this.uploadModal = true;
+        this.$refs.upVersion.openModal();
       }
-
-      this.uploadModal = true;
-      this.$refs.upVersion.openModal();
     },
-    seriesUpdateVersion() {
-      this.$refs.uploadDom.uploadVideo();
-    },
-    setTranscode(status, cover = null) {
-      console.log('转码状态', status, cover);
+    setTranscode(status) {
       this.transcodeing = status;
-      this.transcodeCover = cover;
     },
     setVideoUrl(transcodeOk, file) {
       console.log('视频地址', transcodeOk, file);
 
-      // 转码成功之前 原地址保存一下
-      !transcodeOk && this.confirmSave(file);
-      // 更新版本的接口 是转码后地址
-      transcodeOk && this.confirmUpdate(file);
+      if (!transcodeOk) {
+        // 原地址 更新版本
+        this.confirmUpdate(file);
+      } else {
+        this.playInfo.url = file.url;
+        this.$refs.videoshot.setSource(this.playInfo);
+      }
     },
-    // 上传完成 转码中 调用素材库接口保存信息
-    confirmSave(file) {
-      console.log('保存', file);
-      this.playInfo.url = file.url;
-      this.$refs.videoshot.setSource(this.playInfo);
-      let initVersion = parseInt(this.formItem.version);
-      let newVersion = String(initVersion + 1);
-      this.versionList.push({ version: newVersion });
-      this.formItem.version = newVersion;
-      return;
-
-      updateSucaiVersion(this.fileId, file.url)
-        .then((res) => {
-          if (res.status === 200) {
-            const { version } = res.data.data;
-            this.$Message.success(res.data.msg || '视频保存成功');
-            this.formItem.version = version;
-            this.getDetail();
-          } else {
-            this.$Message.error(res.data.msg || '视频保存失败');
-          }
-        })
-        .finally(() => {
-          callback && callback();
-        });
-    },
-    // TODO 用转码后的地址更新版本 接口报错
     confirmUpdate(file, callback) {
-      console.log('确认', file);
       updateSucaiVersion(this.fileId, file.url)
         .then((res) => {
           if (res.status === 200) {
             const { version } = res.data.data;
             this.$Message.success(res.data.msg || '版本更新成功');
-            this.formItem.version = version;
+            this.formItem.version = String(version);
             this.getDetail();
           } else {
             this.$Message.error(res.data.msg || '版本更新失败');

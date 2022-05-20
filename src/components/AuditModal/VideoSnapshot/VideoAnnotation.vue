@@ -4,7 +4,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 10:14:58
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-18 09:53:00
+ * @LastEditTime: 2022-05-19 14:56:35
 -->
 
 <template>
@@ -13,7 +13,7 @@
       <!-- 播放器 -->
       <video-player
         ref="videoPlayer"
-        :noCommentAccess="noCommentAccess"
+        :hideComment="hideComment"
         @getCutImg="getMarkImage"
         @getCurrentVideoMode="getCurrentVideoMode"
         @allCounts="allCounts"
@@ -27,8 +27,7 @@ import VideoPlayer from './VideoPlayer';
 export default {
   name: 'VideoSnapshot',
   props: {
-    // 串联单：稿件创建人只能更新版本 没有批注权限
-    noCommentAccess: {
+    hideComment: {
       type: Boolean,
       default: false,
     },

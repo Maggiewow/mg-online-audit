@@ -188,8 +188,7 @@
 
       .content-text {
         width: 800px;
-        // padding: 20px 0;
-        padding: 10px 0;
+        padding: 10px 20px;
         line-height: 24px;
         font-size: 15px;
         color: #333;
@@ -556,6 +555,11 @@
 
 .red-tips {
   color: red;
-  line-height: 30px;
+  line-height: 32px;
   font-size: 14px;
+}
+
+.default-img {
+  width: 800px;
+  height: 450px;
 }

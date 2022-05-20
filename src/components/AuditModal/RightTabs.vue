@@ -7,7 +7,7 @@
             type="success"
             size="small"
             class="per-btn"
-            :disabled="noCommentAccess"
+            :disabled="hideComment"
             @click="handleShot"
             >插入批注</Button
           >
@@ -232,7 +232,7 @@ export default {
     },
     // formItem.version
     version: {
-      type: String,
+      type: String | Number,
       default: '',
     },
     seriesList: {
@@ -243,8 +243,7 @@ export default {
       type: Object,
       default: {},
     },
-    // 串联单：稿件创建人只能更新版本 没有批注权限
-    noCommentAccess: {
+    hideComment: {
       type: Boolean,
       default: false,
     },
@@ -327,6 +326,9 @@ export default {
       this.getHistory();
     },
     getHistory(cb) {
+      this.imgList = [];
+      this.totalPage = 0;
+      this.page = 1;
       if (!this.version || this.version === '0') return;
 
       this.comLoading = true;
@@ -489,7 +491,7 @@ export default {
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
       };
-      console.log('goReply', data, index);
+
       let replyItem = {
         id: 'newc',
         pid: data.id,
