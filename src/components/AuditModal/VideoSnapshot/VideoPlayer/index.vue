@@ -310,15 +310,15 @@ export default {
             _self.width = Number((_self.height * parseFloat(rate)).toFixed(2));
           }
           // 544 960 800 453.6 number
-          console.log(
-            'setRealSize===视频实际尺寸',
-            parseFloat(rate),
-            this.videoWidth,
-            this.videoHeight,
-            _self.width,
-            _self.height,
-            typeof _self.height
-          );
+          // console.log(
+          //   'setRealSize===视频实际尺寸',
+          //   parseFloat(rate),
+          //   this.videoWidth,
+          //   this.videoHeight,
+          //   _self.width,
+          //   _self.height,
+          //   typeof _self.height
+          // );
         });
     },
     pauseVideo() {

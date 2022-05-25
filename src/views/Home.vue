@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2022-05-20 11:55:17
+ * @LastEditTime: 2022-05-25 16:14:09
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="comps">
     <!-- 111  4842525  8255683 8313287 -->
-    <Button type="primary" :loading="loading1" @click="handleOpenVideo('8313287')">打开弹窗</Button>
+    <Button type="primary" :loading="loading1" @click="handleOpenVideo('111')">打开弹窗</Button>
     <audit-modal
       ref="auditDom"
       :fileId="fileId"
@@ -18,7 +18,7 @@
       :fromSeries="fromSeries"
       :seriesArticleContent="seriesArticleContent"
     >
-      <!-- <template #toolbar>
+      <template #toolbar>
         <Button type="info" size="small" class="per-btn" @click="handleChangeFile">上一条</Button>
         <Button type="info" size="small" class="per-btn" @click="handleChangeFile">下一条</Button>
         <Button type="success" size="small" class="per-btn" @click="handleNewVersion"
@@ -26,7 +26,7 @@
         >
         <Button type="success" size="small" class="per-btn">通过</Button>
         <Button type="error" size="small" class="per-btn">修改驳回</Button>
-      </template> -->
+      </template>
     </audit-modal>
   </div>
 </template>
@@ -51,7 +51,7 @@ export default {
         nickname: '赵婷婷',
       },
       privList: ['bindSeries', 'bindArticle', 'updateVersion'], // ['bindSeries', 'bindArticle', 'updateVersion']
-      fromSeries: false,
+      fromSeries: true,
       noCommentAccess: false,
       seriesArticleContent: '',
     };
@@ -77,7 +77,9 @@ export default {
       this.$refs.auditDom.fileChange();
     },
     handleNewVersion() {
-      this.$refs.auditDom.handleUpdateVersion();
+      this.$refs.auditDom.handleUpdateVersion((version) => {
+        console.log('更新版本完了 返回版本号', version);
+      });
     },
   },
 };

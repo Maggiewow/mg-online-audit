@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-20 14:20:18
+ * @LastEditTime: 2022-05-25 15:56:45
 -->
 <template>
   <div>
@@ -340,6 +340,7 @@ export default {
       transcodeCover:
         'https://img12.iqilu.com/10339/sucaiku/202008/19/d1fe0b3a210d30c63618e00824adf714.png',
       urlNotAvailable: false, // 视频地址不可用 转码中图片
+      seriesUpdateCallback: null, // 串联单模块 更新版本的回调函数
     };
   },
   props: {
@@ -440,6 +441,10 @@ export default {
       this.isLoading = true;
       let initVersion = String(this.formItem.version);
       let file_id = this.fileId;
+      if (!file_id) {
+        this.$Message.warning('素材为空');
+        return;
+      }
 
       getSucaiVersionDetail(file_id, initVersion)
         .then((res) => {
@@ -738,10 +743,12 @@ export default {
         },
       });
     },
-    handleUpdateVersion() {
+    handleUpdateVersion(cb) {
       if (this.fromSeries) {
+        this.seriesUpdateCallback = cb;
         this.$refs.uploadDom.uploadVideo();
       } else {
+        this.seriesUpdateCallback = null;
         this.uploadModal = true;
         this.$refs.upVersion.openModal();
       }
@@ -767,6 +774,7 @@ export default {
             const { version } = res.data.data;
             this.$Message.success(res.data.msg || '版本更新成功');
             this.formItem.version = String(version);
+            this.seriesUpdateCallback && this.seriesUpdateCallback(version);
             this.getDetail();
           } else {
             this.$Message.error(res.data.msg || '版本更新失败');

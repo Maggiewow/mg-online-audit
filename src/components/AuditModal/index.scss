@@ -193,13 +193,20 @@
         font-size: 15px;
         color: #333;
 
-        img {
-          max-width: 100%;
+        img,
+        video,
+        audio {
+          display: block;
+          max-width: 100% !important;
+          height: auto !important;
           border-style: none;
         }
 
         ::v-deep {
-          img {
+
+          img,
+          video,
+          audio {
             display: block;
             max-width: 100% !important;
             height: auto !important;
