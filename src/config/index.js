@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-11 10:57:35
- * @LastEditTime: 2021-07-14 09:44:53
+ * @LastEditTime: 2022-05-26 10:48:59
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \files\src\config\index.js
@@ -28,6 +28,18 @@ export default {
   baseUrl: {
     dev: '',
     pro: '',
+  },
+  sucaiUrl: {
+    dev: 'https://sucai.shandian8.com',
+    pro: 'https://shandianyun-sck.iqilu.com',
+  },
+  articleUrl: {
+    dev: 'https://article.shandian8.com',
+    pro: 'https://shandianyun-article.iqilu.com',
+  },
+  seriesUrl: {
+    dev: 'https://series.shandian8.com',
+    pro: 'https://shandianyun-series.iqilu.com',
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

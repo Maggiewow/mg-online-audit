@@ -15,13 +15,14 @@
 
 <script>
 import SucaiModalNext from 'sucai-modal-next';
+import { SUCAI_URL } from '@/libs/constant';
 
 export default {
   name: 'sucai-upload',
   props: {},
   data() {
     return {
-      baseUrl: 'https://shandianyun-sck.iqilu.com/',
+      baseUrl: SUCAI_URL + '/',
       websocketUrl: 'wss://shandianyun-sck.iqilu.com/',
       // 视频上传
       uploadPop: false,

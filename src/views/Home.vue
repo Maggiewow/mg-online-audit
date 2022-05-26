@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2022-05-25 16:14:09
+ * @LastEditTime: 2022-05-26 10:43:00
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="comps">
     <!-- 111  4842525  8255683 8313287 -->
-    <Button type="primary" :loading="loading1" @click="handleOpenVideo('111')">打开弹窗</Button>
+    <Button type="primary" :loading="loading1" @click="handleOpenVideo('108')">打开弹窗</Button>
     <audit-modal
       ref="auditDom"
       :fileId="fileId"

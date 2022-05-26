@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 15:02:00
- * @LastEditTime: 2021-07-14 11:27:06
+ * @LastEditTime: 2022-05-26 10:51:17
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \manuscript-pc\src\view\components\manuscripts\wechatDraftModal.vue
@@ -98,7 +98,22 @@
 import { getStatusArticleList, getAllRelatedSeriesList, getSeriesCates } from '@/api/manu';
 import { dateFormat } from './util';
 import { debounce, uniq } from 'lodash';
-import { Modal,  Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker, Dropdown, DropdownItem, DropdownMenu} from 'view-design'
+import {
+  Modal,
+  Tabs,
+  TabPane,
+  Form,
+  FormItem,
+  Select,
+  Option,
+  Icon,
+  Page,
+  Spin,
+  DatePicker,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+} from 'view-design';
 import ZkTable from 'vue-table-with-tree-grid';
 export default {
   name: 'wechatDraftModal',
@@ -117,8 +132,21 @@ export default {
     },
   },
   components: {
-    Modal, Tabs, TabPane, Form, FormItem, Select, Option, Icon, Page, Spin, DatePicker, Dropdown, DropdownItem, DropdownMenu,
-    ZkTable
+    Modal,
+    Tabs,
+    TabPane,
+    Form,
+    FormItem,
+    Select,
+    Option,
+    Icon,
+    Page,
+    Spin,
+    DatePicker,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    ZkTable,
   },
   data() {
     return {
@@ -313,7 +341,6 @@ export default {
               const { id, cate_name, children } = ele;
               return { id, cate_name, children };
             });
-            // console.log("this.serList", this.serList);
           }
         })
         .finally(() => {

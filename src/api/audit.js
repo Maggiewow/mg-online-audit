@@ -4,16 +4,12 @@
  * @作者: 赵婷婷
  * @Date: 2021-06-11 11:21:51
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2021-07-14 14:58:57
+ * @LastEditTime: 2022-05-26 10:51:45
  */
 // import axios from '@/libs/api.request';
 // import { getToken } from '@/libs/util';
+import { SUCAI_URL } from '@/libs/constant';
 import commonAxios from 'ym-bridge-shandianyun';
-
-let sucaiUrl = 'https://shandianyun-sck.iqilu.com';
-if (window.location.origin !== 'https://shandianyun-sck.iqilu.com') {
-  sucaiUrl = 'https://sucai.shandian8.com';
-}
 
 const Formdata_Headers = {
   'Content-Type': 'multipart/form-data', // 之前说的以表单传数据的格式来传递fromdata
@@ -39,14 +35,14 @@ export const ObjectToFormData = (objData) => {
 // 素材版本查看
 export const getSucaiVersionDetail = (file_id, version = '0') => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}`,
     method: 'get',
   });
 };
 // 素材版本更新 /file/{FILE_ID}/version
 export const updateSucaiVersion = (file_id, url) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version`,
+    url: SUCAI_URL + `/file/${file_id}/version`,
     method: 'post',
     data: { url },
   });
@@ -64,7 +60,7 @@ export const createVersionComment = (
   timeline = parseInt(timeline);
   let objData = { content, timeline, frame_pos, parent_id: '0', file };
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}/audit`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}/audit`,
     method: 'post',
     data: ObjectToFormData(objData),
     // headers: Formdata_Headers,
@@ -74,7 +70,7 @@ export const createVersionComment = (
 export const replayVersionComment = (file_id, version = '0', content, parent_id) => {
   let objData = { content, parent_id };
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}/audit`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}/audit`,
     method: 'post',
     data: ObjectToFormData(objData),
     // headers: Formdata_Headers,
@@ -83,7 +79,7 @@ export const replayVersionComment = (file_id, version = '0', content, parent_id)
 // 版本批注列表 page,per_page,order_type,sort_type,is_resolve
 export const getAuditHistory = (file_id, version = '0', page, order_type, is_resolve) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}/audits`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}/audits`,
     method: 'get',
     params: {
       page,
@@ -98,7 +94,7 @@ export const getAuditHistory = (file_id, version = '0', page, order_type, is_res
 // 版本批注删除 /file/version-audit/{ID}
 export const removeVersionAudit = (id) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/version-audit/${id}`,
+    url: SUCAI_URL + `/file/version-audit/${id}`,
     method: 'delete',
   });
 };
@@ -106,7 +102,7 @@ export const removeVersionAudit = (id) => {
 // 版本批注解决
 export const completeVersionAudit = (id) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/version-audit/${id}/resolve`,
+    url: SUCAI_URL + `/file/version-audit/${id}/resolve`,
     method: 'post',
   });
 };
@@ -114,7 +110,7 @@ export const completeVersionAudit = (id) => {
 // 转码下载地址
 export const getVersionTranscodeUrl = (file_id, version = '0') => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}/transcode-url`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}/transcode-url`,
     method: 'get',
   });
 };
@@ -122,7 +118,7 @@ export const getVersionTranscodeUrl = (file_id, version = '0') => {
 // 原片下载地址
 export const getVersionOriginUrl = (file_id, version = '0') => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}/origin-url`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}/origin-url`,
     method: 'get',
   });
 };
@@ -130,7 +126,7 @@ export const getVersionOriginUrl = (file_id, version = '0') => {
 // 文件关联文稿
 export const bindArticle = (file_id, ids) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/bind-article`,
+    url: SUCAI_URL + `/file/${file_id}/bind-article`,
     method: 'post',
     data: { ids },
   });
@@ -139,7 +135,7 @@ export const bindArticle = (file_id, ids) => {
 // 文件关联串联单下的文稿 series_id, source_id, remote_item_id
 export const bindSeriesArticle = (file_id, ids) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/bind-series-item`,
+    url: SUCAI_URL + `/file/${file_id}/bind-series-item`,
     method: 'post',
     data: { ids },
   });
@@ -148,7 +144,7 @@ export const bindSeriesArticle = (file_id, ids) => {
 // 文件关联整个串联单
 export const bindSeries = (file_id, ids) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/bind-series`,
+    url: SUCAI_URL + `/file/${file_id}/bind-series`,
     method: 'post',
     data: { ids },
   });
@@ -157,28 +153,28 @@ export const bindSeries = (file_id, ids) => {
 // 获取本视频已经绑定的文稿和串联单文稿
 export const getVideoRelatedArticles = (file_id) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/local-bound/mix-articles`,
+    url: SUCAI_URL + `/file/${file_id}/local-bound/mix-articles`,
     method: 'get',
   });
 };
 // 本视频已经绑定的文稿
 export const getRelatedArticles = (file_id) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/relation/local-articles`,
+    url: SUCAI_URL + `/file/${file_id}/relation/local-articles`,
     method: 'get',
   });
 };
 // 文件关联串联单文稿 本视频已经绑定的串联单文稿
 export const getRelatedSerieArticles = (file_id) => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/relation/local-series-articles`,
+    url: SUCAI_URL + `/file/${file_id}/relation/local-series-articles`,
     method: 'get',
   });
 };
 //  版本删除
 export const removeVideoVersion = (file_id, version = '0') => {
   return commonAxios.request({
-    url: sucaiUrl + `/file/${file_id}/version/${version}`,
+    url: SUCAI_URL + `/file/${file_id}/version/${version}`,
     method: 'delete',
   });
 };

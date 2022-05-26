@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 15:02:00
- * @LastEditTime: 2021-07-15 10:36:15
+ * @LastEditTime: 2022-05-26 10:52:35
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \manuscript-pc\src\view\components\manuscripts\wechatDraftModal.vue
@@ -34,7 +34,7 @@
 
 <script>
 import VueUploader from '_c/vueuploader';
-import { Modal, Button, Dropdown, DropdownItem, DropdownMenu} from 'view-design'
+import { Modal, Button, Dropdown, DropdownItem, DropdownMenu } from 'view-design';
 
 export default {
   name: 'wechatDraftModal',
@@ -48,7 +48,10 @@ export default {
   },
   props: {
     chooseModalValue: {
-      type: Boolean, Dropdown, DropdownItem, DropdownMenu,
+      type: Boolean,
+      Dropdown,
+      DropdownItem,
+      DropdownMenu,
       default: false,
     },
   },
@@ -62,7 +65,11 @@ export default {
   },
   components: {
     VueUploader,
-    Modal, Button, Dropdown, DropdownItem, DropdownMenu
+    Modal,
+    Button,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
   },
   mounted() {},
   methods: {
@@ -76,7 +83,6 @@ export default {
           url: response.data.data.url,
           file_type: response.data.data.file_type,
         };
-        console.log('上传成功', data);
         this.attachment.push(data);
       } else {
         this.$Notice.error({
@@ -100,7 +106,6 @@ export default {
       this.$emit('uploadError', file, reason);
     },
     chooseDraftOk() {
-      console.log('确认===>', this.attachment);
       if (!this.attachment || this.attachment.length === 0) {
         this.$Message.warning('请先上传视频');
         return;
@@ -116,12 +121,10 @@ export default {
         this.isloading = false;
         this.attachment = [];
       });
-      console.log('确认保存===>', info);
     },
     chooseDraftCancel() {
       this.attachment = [];
       this.$emit('chooseDraftCancel');
-      console.log('取消保存===>', this.attachment);
     },
   },
 };

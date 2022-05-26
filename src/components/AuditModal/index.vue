@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-25 15:56:45
+ * @LastEditTime: 2022-05-26 10:52:08
 -->
 <template>
   <div>
@@ -757,7 +757,7 @@ export default {
       this.transcodeing = status;
     },
     setVideoUrl(transcodeOk, file) {
-      console.log('视频地址', transcodeOk, file);
+      // console.log('视频地址', transcodeOk, file);
 
       if (!transcodeOk) {
         // 原地址 更新版本
@@ -771,10 +771,10 @@ export default {
       updateSucaiVersion(this.fileId, file.url)
         .then((res) => {
           if (res.status === 200) {
-            const { version } = res.data.data;
+            const { version, id } = res.data.data;
             this.$Message.success(res.data.msg || '版本更新成功');
             this.formItem.version = String(version);
-            this.seriesUpdateCallback && this.seriesUpdateCallback(version);
+            this.seriesUpdateCallback && this.seriesUpdateCallback(version, id);
             this.getDetail();
           } else {
             this.$Message.error(res.data.msg || '版本更新失败');
