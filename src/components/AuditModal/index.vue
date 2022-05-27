@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-26 10:52:08
+ * @LastEditTime: 2022-05-26 14:32:30
 -->
 <template>
   <div>
@@ -357,7 +357,7 @@ export default {
       },
     },
     privList: {
-      required: true,
+      required: false,
       default: [],
     },
     // 是否来自串联单的审片
