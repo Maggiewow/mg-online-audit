@@ -1,3 +1,12 @@
+<!--
+ * @文件描述: 横向纵向视频都可兼容 
+ * @目前问题：文字工具批注 canvas渲染时不会自动换行
+ * @公司: 广电信通
+ * @作者: 赵婷婷
+ * @Date: 2021-07-14 16:44:45
+ * @LastEditors: 赵婷婷
+ * @LastEditTime: 2022-05-30 11:00:06
+-->
 <template>
   <div class="draw-context" id="drawContext" v-show="drawContextDisplay">
     <div id="drawToolbar">
@@ -65,16 +74,18 @@
         </div> -->
       </div>
     </div>
+    <!-- 横向视频 x方向canvas画笔坐标偏差25 -->
     <canvas
       id="ImageDraw"
-      v-if="!width || !height || width >= height"
-      :width="width - 50"
+      v-if="isHorizontal"
+      :width="width - horFreeDis"
       :height="height"
       @mousedown="canvasDown($event)"
       @mouseup="canvasUp($event)"
       @mousemove="canvasMove($event)"
       @touchstart="canvasDown($event)"
     ></canvas>
+    <!-- 纵向视频 -->
     <canvas
       v-else
       id="ImageDraw"
@@ -138,7 +149,17 @@ export default {
       imgStack: [],
       beginDraw: false,
       remarkContent: '',
+      horFreeDis: 50, // 横向视频 水平方向上空余出来的距离
     };
+  },
+  computed: {
+    isHorizontal() {
+      return !this.width || !this.height || this.width >= this.height;
+    },
+    // Horizontal 横向视频 水平方向上左右每侧空余出来的距离
+    horOffset() {
+      return this.horFreeDis / 2;
+    },
   },
   components: { Input },
   mounted() {
@@ -154,7 +175,6 @@ export default {
       this.remarkContent = '';
     },
     loadImage(url) {
-      // console.log("draw loadImage", this.width, this.height, url);
       this.clearLastRecord();
       this.imageBase64 = url;
       this.drawContextDisplay = true;
@@ -163,26 +183,23 @@ export default {
     initDraw() {
       this.canvasMoveUse = false;
       let _self = this;
-      var temp = document.getElementById('textAreaCanvas');
-      if (temp) {
-        document.getElementById('drawContext').removeChild(temp);
-      }
+      this.clearInputDom();
       this.clearLastRecord();
       this.imgStack.length = 0;
       this.img.src = this.imageBase64;
       this.img.onload = () => {
         console.log('图片加载完成');
         if (this.width > this.height) {
-          let imageH = ((_self.width - 50) * 9) / 16;
+          let imageH = ((_self.width - _self.horFreeDis) * 9) / 16;
           _self.context.drawImage(
             _self.img,
             0,
             _self.height / 2 - imageH / 2,
-            _self.width - 50,
+            _self.width - _self.horFreeDis,
             imageH
           );
         } else {
-          let imageW = ((_self.height - 50) * 9) / 16;
+          let imageW = ((_self.height - _self.horFreeDis) * 9) / 16;
           //  _self.context.drawImage(
           //   _self.img,
           //   _self.width / 2 - imageW / 2,
@@ -210,8 +227,15 @@ export default {
         this.context.strokeStyle = this.lineColor;
         this.canvasMoveUse = true;
         // client是基于整个页面的坐标，offset是cavas距离pictureDetail顶部以及左边的距离
-        const canvasX = e.layerX;
+        let eLayerX = e.layerX;
+        if (this.isHorizontal) {
+          eLayerX = e.layerX - this.horOffset;
+        } else {
+          eLayerX = e.layerX - parseInt((800 - this.width) / 2);
+        }
+        const canvasX = eLayerX;
         const canvasY = e.layerY;
+
         // 记录起始点和起始状态
         this.beginRec.x = canvasX;
         this.beginRec.y = canvasY;
@@ -244,28 +268,19 @@ export default {
           this.context.putImageData(this.beginRec.imageData, 0, 0);
           this.context.save();
           this.context.beginPath();
-          this.beginArrowhead = { x: e.layerX, y: e.layerY };
+          this.beginArrowhead = {
+            x: eLayerX,
+            y: e.layerY,
+          };
         } else if (this.lineType == 'text') {
           var imgData = this.context.getImageData(0, 0, this.width, this.height);
           // this.imgStack.push(imgData);
-          var temp = document.getElementById('textAreaCanvas');
-          if (temp) {
-            document.getElementById('drawContext').removeChild(temp);
-          }
-          let x = e.layerX;
+          this.clearInputDom();
+          let x = eLayerX;
           let y = e.layerY;
-          var textArea = document.createElement('textarea');
-          document.getElementById('drawContext').appendChild(textArea);
-          textArea.style.position = 'absolute';
-          textArea.style.top = y - 15 + 'px';
-          textArea.style.left = x + 50 + 'px';
-          textArea.style.background = 'transparent';
-          textArea.style.color = this.lineColor;
-          // textArea.focus();
-          textArea.style.font = 'italic small-caps bold 14px arial';
-          textArea.id = 'textAreaCanvas';
-          let _self = this;
+          var textArea = this.createNewInput(x, e.layerX, y);
           this.canvasMoveUse = false;
+          let _self = this;
 
           textArea.onblur = function() {
             _self.drawText(textArea.value, x, y);
@@ -273,14 +288,49 @@ export default {
         }
       }
     },
+    clearInputDom() {
+      var temp = document.getElementById('textAreaCanvas');
+      if (temp) {
+        document.getElementById('drawContext').removeChild(temp);
+      }
+    },
+    // hor横向 vrt纵向
+    createNewInput(horX, vrtX, y) {
+      var textAreaDom = document.createElement('textarea');
+      var paddingDis = 3;
+      let x = this.isHorizontal ? horX + this.horOffset : vrtX;
+
+      document.getElementById('drawContext').appendChild(textAreaDom);
+      textAreaDom.style.position = 'absolute';
+      textAreaDom.style.top = y - 15 + 'px';
+      textAreaDom.style.left = x - paddingDis + 'px';
+      textAreaDom.style.background = 'transparent';
+      textAreaDom.style.color = this.lineColor;
+      // textAreaDom.focus();
+      textAreaDom.style.font = 'italic small-caps bold 14px arial';
+
+      // 新样式优化
+      textAreaDom.style.border = '1px solid ' + this.lineColor;
+      textAreaDom.style.padding = '1px ' + paddingDis + 'px';
+
+      textAreaDom.id = 'textAreaCanvas';
+
+      return textAreaDom;
+    },
     // 鼠标移动时绘制
     canvasMove(e) {
-      // console.log(this.lineType, this.canvasMoveUse, this.canDraw);
       let _self = this;
       if (this.canvasMoveUse && this.canDraw) {
         this.context.strokeStyle = this.lineColor;
         // client是基于整个页面的坐标，offset是cavas距离pictureDetail顶部以及左边的距离
-        let canvasX = e.layerX;
+        let eLayerX = e.layerX;
+        if (this.isHorizontal) {
+          eLayerX = e.layerX - this.horOffset;
+        } else {
+          eLayerX = e.layerX - parseInt((800 - this.width) / 2);
+        }
+
+        let canvasX = eLayerX;
         let canvasY = e.layerY;
         if (this.lineType === 'rec') {
           // 绘制矩形时恢复起始点状态再重新绘制
@@ -315,7 +365,7 @@ export default {
           info.b = b / this.height;
         } else if (this.lineType == 'pencel') {
           if (this.beginDraw) {
-            this.context.lineTo(e.layerX, e.layerY);
+            this.context.lineTo(eLayerX, e.layerY);
             this.context.stroke();
           }
         } else if (this.lineType === 'arrowhead') {
@@ -323,12 +373,7 @@ export default {
             this.context.putImageData(this.beginRec.imageData, 0, 0);
             this.context.beginPath();
             this.context.fillStyle = this.lineColor;
-            this.context.fillArrow(
-              this.beginArrowhead.x,
-              this.beginArrowhead.y,
-              e.layerX,
-              e.layerY
-            ); // 或ctx.drawArrow(10, 10, 80, 100)
+            this.context.fillArrow(this.beginArrowhead.x, this.beginArrowhead.y, eLayerX, e.layerY); // 或ctx.drawArrow(10, 10, 80, 100)
             this.context.fill();
           }
         } else if (this.lineType === 'text') {
@@ -349,7 +394,6 @@ export default {
       }
     },
     drawText(text, x, y) {
-      console.log(text);
       var _self = this;
       _self.context.textAlign = 'stleft art';
       _self.context.font = 'italic small-caps bold 14px arial';
@@ -446,20 +490,13 @@ export default {
      */
     changeCanvasMode(type) {
       this.context.save;
-      let temp = document.getElementById('textAreaCanvas');
-      if (temp) {
-        document.getElementById('drawContext').removeChild(temp);
-      }
+      this.clearInputDom();
       this.beginDraw = false;
       this.lineType = type;
       this.canvasMoveUse = false;
     },
     undoDrawImage: function() {
-      console.log(this.imgStack.length);
-      let temp = document.getElementById('textAreaCanvas');
-      if (temp) {
-        document.getElementById('drawContext').removeChild(temp);
-      }
+      this.clearInputDom();
       if (this.imgStack.length > 0) {
         this.context.clearRect(0, 0, this.width, (this.width * 9) / 16);
         var imgData = this.imgStack.pop();
