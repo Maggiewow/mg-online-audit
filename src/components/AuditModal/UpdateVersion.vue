@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 15:02:00
- * @LastEditTime: 2022-05-26 10:52:35
+ * @LastEditTime: 2022-07-06 15:41:40
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \manuscript-pc\src\view\components\manuscripts\wechatDraftModal.vue
@@ -10,7 +10,7 @@
   <div>
     <Modal v-model="modalKey" title="更新版本" width="700">
       <div>
-        <vue-uploader
+        <!-- <vue-uploader
           v-if="modalKey"
           url="/upload/chunk-resume/process"
           @error="uploadOnError"
@@ -19,8 +19,21 @@
           @uploadError="uploadError"
           :accept="accept"
           :formData="{ force_re_upload: 1 }"
+          :fileNumLimit="1"
           ref="vueUploader"
-        ></vue-uploader>
+        ></vue-uploader> -->
+
+        <js-uploader
+          v-if="modalKey"
+          ref="vueUploader"
+          :env="env"
+          :accept="accept"
+          :fileNumLimit="1"
+          :modalKey="modalKey"
+          @error="uploadOnError"
+          @success="uploadOnSuccess"
+          @remove="uploadOnRemove"
+        ></js-uploader>
       </div>
       <div slot="footer">
         <Button type="info" size="large" @click="chooseDraftCancel">取消</Button>
@@ -34,6 +47,7 @@
 
 <script>
 import VueUploader from '_c/vueuploader';
+import JsUploader from '_c/jsuploader';
 import { Modal, Button, Dropdown, DropdownItem, DropdownMenu } from 'view-design';
 
 export default {
@@ -65,46 +79,59 @@ export default {
   },
   components: {
     VueUploader,
+    JsUploader,
     Modal,
     Button,
     Dropdown,
     DropdownItem,
     DropdownMenu,
   },
+  computed: {
+    env() {
+      if (window.location.origin.includes('https://shandianyun-sck.iqilu.com')) {
+        return 'prod';
+      } else if (window.location.origin.includes('https://sucai.shandian8.com')) {
+        return 'test';
+      }
+
+      return 'test';
+    },
+  },
   mounted() {},
   methods: {
     openModal() {
       this.modalKey = true;
     },
-    uploadOnSuccess(file, response) {
-      if (response.headers.state_code == 200) {
+    uploadOnSuccess(file, extra) {
+      if (extra) {
+        if (!extra.url) {
+          this.$Message.error('上传失败！');
+          return;
+        }
+
         let data = {
           name: file.name,
-          url: response.data.data.url,
-          file_type: response.data.data.file_type,
+          url: extra.url,
+          file_type: extra.file_type,
         };
+        console.log('data', data, file, extra);
         this.attachment.push(data);
-      } else {
-        this.$Notice.error({
-          title: response.msg,
-        });
       }
+    },
+    uploadOnError(errorMessage) {
+      this.$Message.error({
+        content: errorMessage,
+        duration: 7,
+      });
     },
     uploadOnRemove(file, index) {
       console.log(file, index);
-      // delete this.attachment[file.id]
-      // console.log(this.attachment)
       this.attachment.splice(index, 1);
     },
-    uploadOnError(errorMessage) {
-      this.$Notice.error({
-        title: errorMessage,
-      });
-    },
-    uploadError(file, reason) {
-      console.log(reason);
-      this.$emit('uploadError', file, reason);
-    },
+    // uploadError(file, reason) {
+    //   console.log(reason);
+    //   this.$emit('uploadError', file, reason);
+    // },
     chooseDraftOk() {
       if (!this.attachment || this.attachment.length === 0) {
         this.$Message.warning('请先上传视频');

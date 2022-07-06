@@ -3,8 +3,8 @@
 </template>
 
 <script>
+import WebUploader from '@/assets/js/webupload.js';
 import '@/assets/css/webuploader.css';
-import '@/assets/js/webupload.js';
 import { getToken } from '@/libs/util';
 import { uploadMD5 } from '@/api/common';
 import { uploadInit, uploadProcess, uploadFinish } from '@/api/webupload';

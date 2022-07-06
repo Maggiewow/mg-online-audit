@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-30 10:56:06
+ * @LastEditTime: 2022-07-06 15:51:33
 -->
 <template>
   <div>
@@ -777,6 +777,7 @@ export default {
             this.formItem.version = String(version);
             this.seriesUpdateCallback && this.seriesUpdateCallback(version, id);
             this.getDetail();
+            this.uploadModal = false;
           } else {
             this.$Message.error(res.data.msg || '版本更新失败');
           }
