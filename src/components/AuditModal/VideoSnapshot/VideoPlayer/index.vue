@@ -1,6 +1,13 @@
 <template>
   <div>
-    <div id="playerBox" class="player-box">
+    <p
+      v-if="noTransform"
+      class="red-tips"
+    >*提示：视频转码未完成，暂时无法播放</p>
+    <div
+      id="playerBox"
+      class="player-box"
+    >
       <!-- 暂时注释
       v-loading="playerLoading"
       :element-loading-text="playerLoadingText"
@@ -17,14 +24,28 @@
       ></image-draw>
       <div id="videoPlayer">
         <!-- <p class="white-title">{{ videoName }}</p> -->
-        <video id="myVideo" ref="originalVideo" class="video-js my_video" controls>
-          <source :src="videoUrl" type="video/mp4" />
-          <source :src="defaultVideoUrl" type="video/mp4" />
+        <video
+          id="myVideo"
+          ref="originalVideo"
+          class="video-js my_video"
+          controls
+        >
+          <source
+            :src="videoUrl"
+            type="video/mp4"
+          />
+          <!-- <source :src="defaultVideoUrl" type="video/mp4" /> -->
         </video>
       </div>
 
-      <el-row id="playerToolbar" v-if="isLoadVideo">
-        <el-col :span="24" class="bar-item">
+      <el-row
+        id="playerToolbar"
+        v-if="isLoadVideo"
+      >
+        <el-col
+          :span="24"
+          class="bar-item"
+        >
           <span class="text">{{ playerCurrentFrame }}帧 / {{ playerFormatCurrentPostion }}</span>
           <div class="slider">
             <el-slider
@@ -41,17 +62,17 @@
 </template>
 
 <script>
-import VideoCapture from 'video-capture';
-import { setInterval } from 'timers';
-import iconIncrease from './icons/icon-increase.png';
-import iconLower from './icons/icon-lower.png';
-import iconFullscreen from './icons/icon-fullscreen.png';
-import iconEdit from './player-icon/icon-edit.png';
-import ImageDraw from '../ImageDraw';
-import { calcPercent } from '../../util';
-import { Row, Col, Slider, Loading } from 'element-ui';
-import $ from 'jquery';
-import videojs from 'video.js';
+import VideoCapture from 'video-capture'
+import { setInterval } from 'timers'
+import iconIncrease from './icons/icon-increase.png'
+import iconLower from './icons/icon-lower.png'
+import iconFullscreen from './icons/icon-fullscreen.png'
+import iconEdit from './player-icon/icon-edit.png'
+import ImageDraw from '../ImageDraw'
+import { calcPercent } from '../../util'
+import { Row, Col, Slider, Loading } from 'element-ui'
+import $ from 'jquery'
+import videojs from 'video.js'
 
 export default {
   name: 'VideoPlayer',
@@ -129,7 +150,7 @@ export default {
       isFullscreen: false, // 是否为全屏状态
       defaultVideoUrl:
         'https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4',
-    };
+    }
   },
   components: {
     ImageDraw,
@@ -140,117 +161,135 @@ export default {
   },
   watch: {
     videoPlayerIsShow(bool) {
-      this.$store.commit('setDrawState', !bool);
+      this.$store.commit('setDrawState', !bool)
+    },
+  },
+  computed: {
+    // 转码未完成 无法播放
+    noTransform() {
+      if (this.videoUrl.endsWith('.mxf') || this.videoUrl.endsWith('.MXF')) {
+        return true
+      }
+
+      return false
     },
   },
   created() {
     document.addEventListener('fullscreenchange', (event) => {
       if (document.fullscreenElement) {
-        this.isFullscreen = true;
-        $('#video_edit_icon').hide();
+        this.isFullscreen = true
+        $('#video_edit_icon').hide()
       } else {
-        this.isFullscreen = false;
-        $('#video_edit_icon').show();
+        this.isFullscreen = false
+        $('#video_edit_icon').show()
       }
-    });
+    })
   },
   mounted() {
-    this.initVideo();
-    this.setRealSize();
+    this.initVideo()
+    this.setRealSize()
     // this.videoPlayerNoVideoIsShow=false;
-    this.handelKeyDown();
+    this.handelKeyDown()
   },
   methods: {
     stopHandel() {
-      window.removeEventListener('keydown', this.keyDownCallback, false);
+      window.removeEventListener('keydown', this.keyDownCallback, false)
     },
     handelKeyDown() {
-      window.addEventListener('keydown', this.keyDownCallback, false);
+      window.addEventListener('keydown', this.keyDownCallback, false)
     },
     keyDownCallback(event) {
-      let frameTime = 1 / 25;
-      var _self = this;
-      let e = event || window.event || arguments.callee.caller.arguments[0];
+      let frameTime = 1 / 25
+      var _self = this
+      let e = event || window.event || arguments.callee.caller.arguments[0]
       if (_self.videoPlayerIsShow) {
-        _self.playerControls.stateIcon = 'el-icon-video-play';
+        _self.playerControls.stateIcon = 'el-icon-video-play'
         if (e && e.keyCode === 37) {
           // left arrow
-          _self.videoPlayer.pause();
-          _self.videoPlayer.currentTime(Math.max(0, _self.videoPlayer.currentTime() - frameTime));
+          _self.videoPlayer.pause()
+          _self.videoPlayer.currentTime(
+            Math.max(0, _self.videoPlayer.currentTime() - frameTime)
+          )
         } else if (e && e.keyCode === 39) {
           // right arrow
-          _self.videoPlayer.pause();
+          _self.videoPlayer.pause()
           _self.videoPlayer.currentTime(
-            Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime)
-          );
+            Math.min(
+              _self.videoPlayer.duration(),
+              _self.videoPlayer.currentTime() + frameTime
+            )
+          )
         } else if (e && e.keyCode === 32) {
-          e.preventDefault();
+          e.preventDefault()
           if (_self.videoPlayer.paused()) {
-            _self.videoPlayer.play();
-            _self.playerControls.stateIcon = 'el-icon-video-pause';
-            _self.playerStepInterval();
+            _self.videoPlayer.play()
+            _self.playerControls.stateIcon = 'el-icon-video-pause'
+            _self.playerStepInterval()
           } else {
-            _self.videoPlayer.pause();
-            _self.playerControls.stateIcon = 'el-icon-video-play';
+            _self.videoPlayer.pause()
+            _self.playerControls.stateIcon = 'el-icon-video-play'
           }
         }
       }
     },
     initRate() {
-      let player = videojs('myVideo');
-      player && player.playbackRate && player.playbackRate(1.0);
+      let player = videojs('myVideo')
+      player && player.playbackRate && player.playbackRate(1.0)
 
-      $('#video_rate_opt')
-        .find('option:selected')
-        .text('1.0X');
-      $('#default_opt').attr('selected', true);
+      $('#video_rate_opt').find('option:selected').text('1.0X')
+      $('#default_opt').attr('selected', true)
     },
     /**
      * 加载视频资源
      */
     initVideoUrl(project, pWidth, pHeight) {
-      this.initRate();
-      this.currentProject = project;
-      this.isLoadVideo = true;
-      let url = project.url;
+      this.initRate()
+      this.currentProject = project
+      this.isLoadVideo = true
+      let url = project.url
 
-      (this.videoPlayerNoVideoIsShow = false),
-        (this.videoUrl = url),
-        (this.videoName = project.name);
+      this.videoPlayerNoVideoIsShow = false
+      this.videoUrl = url
+      this.videoName = project.name
 
-      this.videoPlayer.width(pWidth + 'px');
-      this.videoPlayer.height(pHeight + 'px');
-      this.videoPlayer.src(this.videoUrl);
-      this.videoPlayer.load(this.videoUrl);
+      if (this.noTransform) {
+        this.$Message.info('转码未完成,无法播放')
+        return
+      }
 
-      var _self = this;
+      this.videoPlayer.width(pWidth + 'px')
+      this.videoPlayer.height(pHeight + 'px')
+      this.videoPlayer.src(this.videoUrl)
+      this.videoPlayer.load(this.videoUrl)
+
+      var _self = this
       // 谷歌浏览器有时不允许自动播放音视频 给用户造成噪音干扰
       this.videoPlayer
         .play()
         .then((res) => {
-          _self.playerControls.stateIcon = 'el-icon-video-pause';
+          _self.playerControls.stateIcon = 'el-icon-video-pause'
         })
         .catch((err) => {
-          _self.playerControls.stateIcon = 'el-icon-video-play';
+          _self.playerControls.stateIcon = 'el-icon-video-play'
         })
         .finally(() => {
           setTimeout(() => {
-            _self.playerStepInterval();
-          }, 500);
-        });
+            _self.playerStepInterval()
+          }, 500)
+        })
     },
     /**
      * video.js
      */
     initVideo() {
-      var _self = this;
-      this.videoPlayer = videojs(myVideo, this.videoOption, function() {
-        _self.addRateTool();
+      var _self = this
+      this.videoPlayer = videojs(myVideo, this.videoOption, function () {
+        _self.addRateTool()
 
-        this.on('ended', function() {
-          console.log('播放完毕，重新播放');
-        });
-      });
+        this.on('ended', function () {
+          // 播放完毕
+        })
+      })
     },
     // 防止重复添加-添加一个标识
     addRateTool() {
@@ -264,50 +303,50 @@ export default {
             '<option value="opel" class="opt-rate">1.5X</option>\n' +
             '<option value="audi" class="opt-rate">2.0X</option>\n' +
             '</select></button>'
-        );
+        )
         $('.vjs-control-bar').append(
           '<button class="vjs-control" id="video_edit_icon" style="width:90px;"><div id="edit-icon" class="edit-btn-item" title="批注"><img class="edit-img" src=' +
             require('./player-icon/icon-edit.png') +
             ' />批注</div></button>'
-        );
-        this.addTools = 'YES';
+        )
+        this.addTools = 'YES'
         $('.sel-rate').change(() => {
-          let tx = $('.sel-rate option:selected').text();
-          var player = videojs('myVideo');
-          player.ready(function() {
+          let tx = $('.sel-rate option:selected').text()
+          var player = videojs('myVideo')
+          player.ready(function () {
             // 速率
             setTimeout(() => {
-              this.playbackRate(parseFloat(tx));
-            }, 20);
-          });
-        });
+              this.playbackRate(parseFloat(tx))
+            }, 20)
+          })
+        })
         $('#edit-icon').click(() => {
           if (this.isFullscreen) {
-            return;
+            return
           }
 
-          this.handleMark();
-        });
+          this.handleMark()
+        })
       } else {
-        console.log('已经添加了');
+        // console.log('已经添加了')
       }
     },
     setRealSize() {
-      let video = this.$refs.originalVideo;
-      let _self = this;
+      let video = this.$refs.originalVideo
+      let _self = this
       video &&
-        video.addEventListener('canplay', function() {
-          let rate = (this.videoWidth / this.videoHeight).toFixed(3);
+        video.addEventListener('canplay', function () {
+          let rate = (this.videoWidth / this.videoHeight).toFixed(3)
 
           // this.height = this.width / parseFloat(rate);
           if (parseFloat(rate) > 1) {
             // 横版视频
-            _self.width = 800;
-            _self.height = Number((_self.width / parseFloat(rate)).toFixed(2));
+            _self.width = 800
+            _self.height = Number((_self.width / parseFloat(rate)).toFixed(2))
           } else {
             // 竖版视频
-            _self.height = 450;
-            _self.width = Number((_self.height * parseFloat(rate)).toFixed(2));
+            _self.height = 450
+            _self.width = Number((_self.height * parseFloat(rate)).toFixed(2))
           }
           // 544 960 800 453.6 number
           // console.log(
@@ -319,69 +358,74 @@ export default {
           //   _self.height,
           //   typeof _self.height
           // );
-        });
+        })
     },
     pauseVideo() {
-      this.videoPlayer.pause();
+      this.videoPlayer.pause()
     },
     playerPlay() {
       if (this.videoPlayerIsShow) {
         if (this.videoPlayer.paused()) {
-          this.videoPlayer.play();
-          this.playerControls.stateIcon = 'el-icon-video-pause';
-          this.playerStepInterval();
+          this.videoPlayer.play()
+          this.playerControls.stateIcon = 'el-icon-video-pause'
+          this.playerStepInterval()
         } else {
-          this.videoPlayer.pause();
-          this.playerControls.stateIcon = 'el-icon-video-play';
+          this.videoPlayer.pause()
+          this.playerControls.stateIcon = 'el-icon-video-play'
         }
       } else {
-        this.$message.error('处于视频标注模式');
+        this.$message.error('处于视频标注模式')
       }
     },
     playerStepInterval() {
-      this.playerDuration = this.videoPlayer.duration();
-      this.playerFormatDuration = this.formatSeconds(this.playerDuration);
-      this.playerDurationFrame = this.calcFrame(this.playerDuration);
-      this.$emit('allCounts', this.playerFormatDuration, this.playerDurationFrame);
-      var _self = this;
-      setInterval(function() {
-        _self.playerCurrentPostion = _self.videoPlayer.currentTime();
-        _self.playerFormatCurrentPostion = _self.formatSeconds(_self.playerCurrentPostion);
-        _self.playerCurrentFrame = _self.calcFrame(_self.playerCurrentPostion);
-        _self.playerPercentage = (_self.playerCurrentPostion / _self.playerDuration) * 100;
-      }, 1000 / 25);
+      this.playerDuration = this.videoPlayer.duration()
+      this.playerFormatDuration = this.formatSeconds(this.playerDuration)
+      this.playerDurationFrame = this.calcFrame(this.playerDuration)
+      this.$emit(
+        'allCounts',
+        this.playerFormatDuration,
+        this.playerDurationFrame
+      )
+      var _self = this
+      setInterval(function () {
+        _self.playerCurrentPostion = _self.videoPlayer.currentTime()
+        _self.playerFormatCurrentPostion = _self.formatSeconds(
+          _self.playerCurrentPostion
+        )
+        _self.playerCurrentFrame = _self.calcFrame(_self.playerCurrentPostion)
+        _self.playerPercentage =
+          (_self.playerCurrentPostion / _self.playerDuration) * 100
+      }, 1000 / 25)
     },
-    changeVolume: function(type) {
+    changeVolume: function (type) {
       if (this.videoPlayerIsShow) {
-        this.videoPlayer.muted(false);
-        console.log(this.playerVolume);
+        this.videoPlayer.muted(false)
         if (type == 'add') {
           if (this.playerVolume < 1) {
-            this.playerVolume += 0.1;
+            this.playerVolume += 0.1
           }
         } else if (type == 'sub') {
           if (this.playerVolume > 0) {
-            this.playerVolume -= 0.1;
+            this.playerVolume -= 0.1
           }
         }
-        this.playerVolume = Math.round(this.playerVolume * 10) / 10;
-        this.videoPlayer.volume(this.playerVolume);
+        this.playerVolume = Math.round(this.playerVolume * 10) / 10
+        this.videoPlayer.volume(this.playerVolume)
       } else {
-        this.$message.error('处于视频标注模式');
+        this.$message.error('处于视频标注模式')
       }
     },
 
     getEditMode(mode) {
-      this.videoPlayerIsShow = mode;
-      this.$emit('getCurrentVideoMode', mode);
+      this.videoPlayerIsShow = mode
+      this.$emit('getCurrentVideoMode', mode)
     },
     handleSliderChange(data) {
       if (this.videoPlayerIsShow) {
-        let time = (this.playerDuration * data) / 100;
-        console.log(time);
-        this.videoPlayer.currentTime(time);
+        let time = (this.playerDuration * data) / 100
+        this.videoPlayer.currentTime(time)
       } else {
-        this.$message.error('处于视频标注模式');
+        this.$message.error('处于视频标注模式')
       }
     },
     /**
@@ -389,41 +433,42 @@ export default {
      */
     async handleMark() {
       if (this.hideComment) {
-        console.log('禁止批注');
-        return;
+        return
       }
 
-      this.$emit('getCurrentVideoMode', !this.videoPlayerIsShow);
+      this.$emit('getCurrentVideoMode', !this.videoPlayerIsShow)
       if (this.videoPlayerIsShow) {
-        let _self = this;
+        let _self = this
         if (this.videoPlayer.currentTime() > 0) {
-          _self.playerLoading = true;
-          _self.playerLoadingText = '正在获取视频流...';
-          this.videoPlayer.pause();
-          this.playerControls.stateIcon = 'el-icon-video-play';
-          console.log('截图11', this.videoUrl, this.playerCurrentPostion);
+          _self.playerLoading = true
+          _self.playerLoadingText = '正在获取视频流...'
+          this.videoPlayer.pause()
+          this.playerControls.stateIcon = 'el-icon-video-play'
+          // 截图
           if (this.playerCurrentPostion <= 0) {
-            this.$Message.warning('时间选择应该大于0');
-            return;
+            this.$Message.warning('时间选择应该大于0')
+            return
           }
 
-          let dom1 = new VideoCapture(this.videoUrl);
-          let { dataURL, width, height } = await dom1.capture(this.playerCurrentPostion);
+          let dom1 = new VideoCapture(this.videoUrl)
+          let { dataURL, width, height } = await dom1.capture(
+            this.playerCurrentPostion
+          )
           // let { dataURL, width, height } = await new VideoCapture(
           //   this.videoUrl
           // ).capture(_self.playerCurrentPostion);
           // console.log("截图得到", width, height, dataURL);
 
           // 插件自动生成png 后端要求jpg jpeg
-          dataURL = dataURL.replace('png', 'jpeg');
-          this.$refs.imageDraw.loadImage(dataURL);
-          this.videoPlayerIsShow = false;
-          _self.playerLoading = false;
+          dataURL = dataURL.replace('png', 'jpeg')
+          this.$refs.imageDraw.loadImage(dataURL)
+          this.videoPlayerIsShow = false
+          _self.playerLoading = false
         } else {
-          this.$message.error('时间是大于0的数字');
+          this.$message.error('时间是大于0的数字')
         }
       } else {
-        this.$message.error('已处于视频标注模式');
+        this.$message.error('已处于视频标注模式')
       }
     },
     /**
@@ -436,47 +481,47 @@ export default {
         content,
         currentPosition: this.videoPlayer.currentTime(),
         currentProject: this.currentProject, // 选中
-      };
+      }
       this.$emit('getCutImg', {
         ...obj,
         // 秒数的百分比 而不是帧数
         percent: calcPercent(obj.currentPosition, this.playerDuration),
-      });
-      this.videoPlayerIsShow = true;
-      this.$emit('getCurrentVideoMode', true);
+      })
+      this.videoPlayerIsShow = true
+      this.$emit('getCurrentVideoMode', true)
     },
     calcFrame(time) {
-      if (!time) return 0;
+      if (!time) return 0
 
-      let frameTime = 1000 / 25; // 一帧多少毫秒
-      let frames = (time * 1000) / frameTime;
-      frames = Math.ceil(frames);
-      return frames;
+      let frameTime = 1000 / 25 // 一帧多少毫秒
+      let frames = (time * 1000) / frameTime
+      frames = Math.ceil(frames)
+      return frames
     },
     formatSeconds(value) {
       if (window.isNaN(value)) {
         // this.$message.error('无效视频')
-        return '00:00';
+        return '00:00'
       }
 
-      var value = parseInt(value);
-      var second = value % 60;
-      var minute = (value - second) / 60;
-      var hour = (minute - (minute % 60)) / 60;
+      var value = parseInt(value)
+      var second = value % 60
+      var minute = (value - second) / 60
+      var hour = (minute - (minute % 60)) / 60
       if (hour != 0) {
-        minute = minute % 60;
+        minute = minute % 60
         return (
           (hour < 10 ? '0' + hour : hour) +
           ':' +
           (minute < 10 ? '0' + minute : +minute) +
           ':' +
           (second < 10 ? '0' + second : second)
-        );
+        )
       } else {
         if (minute === 0) {
-          return '00:' + (second < 10 ? '0' + second : second);
+          return '00:' + (second < 10 ? '0' + second : second)
         } else if (minute > 0) {
-          return (minute < 10 ? '0' + minute : +minute) + ':' + second;
+          return (minute < 10 ? '0' + minute : +minute) + ':' + second
         }
       }
       /* var theTime = parseInt(value)// 秒
@@ -516,10 +561,16 @@ export default {
         return result */
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
+.red-tips {
+  padding-left: 5px;
+  line-height: 28px;
+  font-size: 16px;
+  color: red;
+}
 .player-box {
   width: 100%;
   height: 100%;

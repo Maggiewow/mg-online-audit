@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 15:02:00
- * @LastEditTime: 2022-05-27 11:38:50
+ * @LastEditTime: 2023-01-13 11:31:53
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \manuscript-pc\src\view\components\manuscripts\wechatDraftModal.vue
@@ -17,13 +17,30 @@
       width="700"
     >
       <div class="modal-dom">
-        <Form class="filter-form" :model="formItem" :label-width="100">
-          <FormItem label="栏目：" prop="cateId">
-            <Select v-model="formItem.cateId" :style="{ width: '150px' }">
-              <Option v-for="{ id, name } in cateList" :value="id" :key="id">{{ name }}</Option>
+        <Form
+          class="filter-form"
+          :model="formItem"
+          :label-width="100"
+        >
+          <FormItem
+            label="栏目："
+            prop="cateId"
+          >
+            <Select
+              v-model="formItem.cateId"
+              :style="{ width: '150px' }"
+            >
+              <Option
+                v-for="{ id, name } in cateList"
+                :value="id"
+                :key="id"
+              >{{ name }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="日期：" prop="pickDate">
+          <FormItem
+            label="日期："
+            prop="pickDate"
+          >
             <DatePicker
               v-model="formItem.pickDate"
               format="yyyy-MM-dd"
@@ -58,10 +75,10 @@
 </template>
 
 <script>
-import { getSeriesCates, getAllSeriesList } from '@/api/manu';
-import { s_to_hs, dateFormat } from './util';
-import { debounce, uniq } from 'lodash';
-import { Modal, Form, FormItem, Table, Page, DatePicker } from 'view-design';
+import { getSeriesCates, getAllSeriesList } from '@/api/manu'
+import { dateFormat } from './util'
+import { debounce, uniq } from 'lodash'
+import { Modal, Form, FormItem, Table, Page, DatePicker } from 'view-design'
 
 export default {
   name: 'seriesModal',
@@ -111,9 +128,9 @@ export default {
               2: '通过',
               3: '驳回',
               4: '已评分',
-            };
-            let formatStr = statusStrObj[row.status] || '状态值' + row.status;
-            return h('span', formatStr);
+            }
+            let formatStr = statusStrObj[row.status] || '状态值' + row.status
+            return h('span', formatStr)
           },
         },
       ],
@@ -125,22 +142,22 @@ export default {
       formItem: { cateId: '0', pickDate: new Date() },
       selectedIds: [], // 之前绑定的 用来回显
       dbFetchList: {},
-    };
+    }
   },
   watch: {
     chooseModalValue(newValue, oldValue) {
-      this.modalKey = newValue;
+      this.modalKey = newValue
       if (newValue) {
-        this.page = 1;
-        this.getCates();
-        this.selectedIds = this.bindSeriesInfo.map((id) => Number(id));
+        this.page = 1
+        this.getCates()
+        this.selectedIds = this.bindSeriesInfo.map((id) => Number(id))
       }
     },
     formItem: {
       handler() {
         if (this.chooseModalValue) {
-          this.page = 1;
-          this.dbFetchList && this.dbFetchList();
+          this.page = 1
+          this.dbFetchList && this.dbFetchList()
         }
       },
       deep: true,
@@ -148,7 +165,7 @@ export default {
     },
   },
   created() {
-    this.dbFetchList = debounce(this.getSeriesList, 300, false);
+    this.dbFetchList = debounce(this.getSeriesList, 300, false)
   },
   mounted() {
     // this.getSeriesList();
@@ -156,80 +173,79 @@ export default {
   },
   methods: {
     getSeriesList() {
-      this.tableLoading = true;
-      const { cateId, pickDate } = this.formItem;
-      let dateStr = dateFormat(pickDate.getTime(), 'YYYY-MM-DD');
+      this.tableLoading = true
+      const { cateId, pickDate } = this.formItem
+      let dateStr = dateFormat(pickDate.getTime(), 'YYYY-MM-DD')
       getAllSeriesList(this.page, cateId, dateStr)
         .then((res) => {
           // series: [{id: 2, cate_id: 2364, cate_name: "金栋测试", time: "2021-04-12", status: 2},…] total: 8
           if (res.status === 200) {
-            const { series = [], total = 0 } = res.data.data;
+            const { series = [], total = 0 } = res.data.data
             this.seriesList = series.map((ele) => {
               if (this.selectedIds.includes(ele.id)) {
-                this.$set(ele, '_checked', true);
+                this.$set(ele, '_checked', true)
               }
-              return ele;
-            });
-            this.total = Number(total);
-            // console.log("this.seriesList", series);
+              return ele
+            })
+            this.total = Number(total)
           }
-          this.tableLoading = false;
+          this.tableLoading = false
         })
         .catch((err) => {
-          console.log('err', err);
-          this.tableLoading = false;
-        });
+          console.log('err', err)
+          this.tableLoading = false
+        })
     },
     getCates() {
       getSeriesCates()
         .then((res) => {
-          const { articleCate, broadcast } = res.data.data;
+          const { articleCate, broadcast } = res.data.data
           this.cateList = [
             ...articleCate.map(({ id, name }) => ({
               id,
               name: '电视-' + name,
             })),
             ...broadcast.map(({ id, name }) => ({ id, name: '广播-' + name })),
-          ];
-          let list = this.cateList;
+          ]
+          let list = this.cateList
           if (list && list.length > 0) {
-            this.formItem = { cateId: list[0].id, pickDate: new Date() };
+            this.formItem = { cateId: list[0].id, pickDate: new Date() }
           } else {
-            this.formItem = { cateId: '0', pickDate: new Date() };
+            this.formItem = { cateId: '0', pickDate: new Date() }
           }
         })
         .catch((err) => {
-          console.log('err', err);
-        });
+          console.log('err', err)
+        })
     },
 
     chooseDraftOk() {
-      this.$emit('chooseDraftOk', this.selectedIds);
+      this.$emit('chooseDraftOk', this.selectedIds)
       this.$nextTick(() => {
-        this.selectedIds = [];
-      });
+        this.selectedIds = []
+      })
     },
     chooseDraftCancel() {
-      this.$emit('chooseDraftCancel');
+      this.$emit('chooseDraftCancel')
       this.$nextTick(() => {
-        this.selectedIds = [];
-      });
+        this.selectedIds = []
+      })
     },
     changePage(page) {
-      this.page = page;
-      this.getSeriesList();
+      this.page = page
+      this.getSeriesList()
     },
     chooseSeries(choosedDraft) {
-      let choosedIds = choosedDraft.map(({ id }) => id);
+      let choosedIds = choosedDraft.map(({ id }) => id)
       // 已选择id中 去掉本页的 剩下的和choosedDraft合并
-      let curPageIds = this.seriesList.map(({ id }) => id);
-      let otherPageIds = this.selectedIds.filter((id) => !curPageIds.includes(id));
-      this.selectedIds = uniq(otherPageIds.concat(choosedIds));
-
-      console.log(choosedDraft, this.selectedIds);
+      let curPageIds = this.seriesList.map(({ id }) => id)
+      let otherPageIds = this.selectedIds.filter(
+        (id) => !curPageIds.includes(id)
+      )
+      this.selectedIds = uniq(otherPageIds.concat(choosedIds))
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -5,43 +5,109 @@
  * @作者: 赵婷婷
  * @Date: 2021-07-14 16:44:45
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2022-05-30 11:00:06
+ * @LastEditTime: 2023-01-13 11:26:37
 -->
 <template>
-  <div class="draw-context" id="drawContext" v-show="drawContextDisplay">
+  <div
+    class="draw-context"
+    id="drawContext"
+    v-show="drawContextDisplay"
+  >
     <div id="drawToolbar">
       <div class="tool-bar">
         <div class="oper-btns">
-          <div class="tool-btn" title="画笔工具" @click="changeCanvasMode('pencel')">
-            <img v-if="lineType === 'pencel'" src="./player-icon/icon-xian.png" />
-            <img v-else src="./player-icon/icon-xian-w.png" />
+          <div
+            class="tool-btn"
+            title="画笔工具"
+            @click="changeCanvasMode('pencel')"
+          >
+            <img
+              v-if="lineType === 'pencel'"
+              src="./player-icon/icon-xian.png"
+            />
+            <img
+              v-else
+              src="./player-icon/icon-xian-w.png"
+            />
           </div>
-          <div class="tool-btn" title="椭圆工具" @click="changeCanvasMode('circle')">
-            <img v-if="lineType === 'circle'" src="./player-icon/icon-yuan.png" />
-            <img v-else src="./player-icon/icon-yuan-w.png" />
+          <div
+            class="tool-btn"
+            title="椭圆工具"
+            @click="changeCanvasMode('circle')"
+          >
+            <img
+              v-if="lineType === 'circle'"
+              src="./player-icon/icon-yuan.png"
+            />
+            <img
+              v-else
+              src="./player-icon/icon-yuan-w.png"
+            />
           </div>
-          <div class="tool-btn" title="矩形工具" @click="changeCanvasMode('rec')">
-            <img v-if="lineType === 'rec'" src="./player-icon/icon-fang.png" />
-            <img v-else src="./player-icon/icon-fang-w.png" />
+          <div
+            class="tool-btn"
+            title="矩形工具"
+            @click="changeCanvasMode('rec')"
+          >
+            <img
+              v-if="lineType === 'rec'"
+              src="./player-icon/icon-fang.png"
+            />
+            <img
+              v-else
+              src="./player-icon/icon-fang-w.png"
+            />
           </div>
-          <div class="tool-btn" title="文字工具" @click="changeCanvasMode('text')">
-            <img v-if="lineType === 'text'" src="./player-icon/icon-zi.png" />
-            <img v-else src="./player-icon/icon-zi-w.png" />
+          <div
+            class="tool-btn"
+            title="文字工具"
+            @click="changeCanvasMode('text')"
+          >
+            <img
+              v-if="lineType === 'text'"
+              src="./player-icon/icon-zi.png"
+            />
+            <img
+              v-else
+              src="./player-icon/icon-zi-w.png"
+            />
           </div>
-          <div class="tool-btn" title="箭头工具" @click="changeCanvasMode('arrowhead')">
-            <img v-if="lineType === 'arrowhead'" src="./player-icon/icon-jian.png" />
-            <img v-else src="./player-icon/icon-jian-w.png" />
+          <div
+            class="tool-btn"
+            title="箭头工具"
+            @click="changeCanvasMode('arrowhead')"
+          >
+            <img
+              v-if="lineType === 'arrowhead'"
+              src="./player-icon/icon-jian.png"
+            />
+            <img
+              v-else
+              src="./player-icon/icon-jian-w.png"
+            />
           </div>
         </div>
         <div class="main-btns">
           <!-- <el-color-picker v-model="lineColor" title="颜色选择器"></el-color-picker> -->
-          <div class="tool-btn" title="撤销" @click="undoDrawImage">
+          <div
+            class="tool-btn"
+            title="撤销"
+            @click="undoDrawImage"
+          >
             <img src="./player-icon/icon-back.png" />
           </div>
-          <div class="tool-btn" title="完成" @click="saveDrawImage">
+          <div
+            class="tool-btn"
+            title="完成"
+            @click="saveDrawImage"
+          >
             <img src="./player-icon/icon-ok.png" />
           </div>
-          <div class="tool-btn" title="取消" @click="exitDrawImage">
+          <div
+            class="tool-btn"
+            title="取消"
+            @click="exitDrawImage"
+          >
             <img src="./player-icon/icon-close.png" />
           </div>
         </div>
@@ -100,8 +166,8 @@
 </template>
 
 <script>
-import { Input } from 'view-design';
-import 'canvas-arrow';
+import { Input } from 'view-design'
+import 'canvas-arrow'
 
 export default {
   name: 'ImageDraw',
@@ -150,56 +216,55 @@ export default {
       beginDraw: false,
       remarkContent: '',
       horFreeDis: 50, // 横向视频 水平方向上空余出来的距离
-    };
+    }
   },
   computed: {
     isHorizontal() {
-      return !this.width || !this.height || this.width >= this.height;
+      return !this.width || !this.height || this.width >= this.height
     },
     // Horizontal 横向视频 水平方向上左右每侧空余出来的距离
     horOffset() {
-      return this.horFreeDis / 2;
+      return this.horFreeDis / 2
     },
   },
   components: { Input },
   mounted() {
-    this.canvas = document.getElementById('ImageDraw');
-    this.context = this.canvas.getContext('2d');
-    this.clearLastRecord();
-    this.initDraw();
+    this.canvas = document.getElementById('ImageDraw')
+    this.context = this.canvas.getContext('2d')
+    this.clearLastRecord()
+    this.initDraw()
   },
   methods: {
     clearLastRecord() {
-      let leng = this.width >= this.height ? this.width : this.height;
-      this.context.clearRect(0, 0, leng, leng);
-      this.remarkContent = '';
+      let leng = this.width >= this.height ? this.width : this.height
+      this.context.clearRect(0, 0, leng, leng)
+      this.remarkContent = ''
     },
     loadImage(url) {
-      this.clearLastRecord();
-      this.imageBase64 = url;
-      this.drawContextDisplay = true;
-      this.initDraw();
+      this.clearLastRecord()
+      this.imageBase64 = url
+      this.drawContextDisplay = true
+      this.initDraw()
     },
     initDraw() {
-      this.canvasMoveUse = false;
-      let _self = this;
-      this.clearInputDom();
-      this.clearLastRecord();
-      this.imgStack.length = 0;
-      this.img.src = this.imageBase64;
+      this.canvasMoveUse = false
+      let _self = this
+      this.clearInputDom()
+      this.clearLastRecord()
+      this.imgStack.length = 0
+      this.img.src = this.imageBase64
       this.img.onload = () => {
-        console.log('图片加载完成');
         if (this.width > this.height) {
-          let imageH = ((_self.width - _self.horFreeDis) * 9) / 16;
+          let imageH = ((_self.width - _self.horFreeDis) * 9) / 16
           _self.context.drawImage(
             _self.img,
             0,
             _self.height / 2 - imageH / 2,
             _self.width - _self.horFreeDis,
             imageH
-          );
+          )
         } else {
-          let imageW = ((_self.height - _self.horFreeDis) * 9) / 16;
+          let imageW = ((_self.height - _self.horFreeDis) * 9) / 16
           //  _self.context.drawImage(
           //   _self.img,
           //   _self.width / 2 - imageW / 2,
@@ -208,260 +273,285 @@ export default {
           //   _self.height
           // );
 
-          _self.context.drawImage(_self.img, 0, 0, imageW + 20, _self.height);
+          _self.context.drawImage(_self.img, 0, 0, imageW + 20, _self.height)
         }
-      };
+      }
 
       this.img.onerror = () => {
         if (this.imageBase64) {
-          console.log('图片加载失败');
-          this.$Message.warning('视频截图加载失败，请重试');
+          console.log('图片加载失败')
+          this.$Message.warning('视频截图加载失败，请重试')
         }
-      };
-      this.context.lineWidth = this.lineWidth;
-      this.context.strokeStyle = this.lineColor;
+      }
+      this.context.lineWidth = this.lineWidth
+      this.context.strokeStyle = this.lineColor
     },
     // 鼠标按下
     canvasDown(e) {
       if (this.canDraw) {
-        this.context.strokeStyle = this.lineColor;
-        this.canvasMoveUse = true;
+        this.context.strokeStyle = this.lineColor
+        this.canvasMoveUse = true
         // client是基于整个页面的坐标，offset是cavas距离pictureDetail顶部以及左边的距离
-        let eLayerX = e.layerX;
+        let eLayerX = e.layerX
         if (this.isHorizontal) {
-          eLayerX = e.layerX - this.horOffset;
+          eLayerX = e.layerX - this.horOffset
         } else {
-          eLayerX = e.layerX - parseInt((800 - this.width) / 2);
+          eLayerX = e.layerX - parseInt((800 - this.width) / 2)
         }
-        const canvasX = eLayerX;
-        const canvasY = e.layerY;
+        const canvasX = eLayerX
+        const canvasY = e.layerY
 
         // 记录起始点和起始状态
-        this.beginRec.x = canvasX;
-        this.beginRec.y = canvasY;
-        this.beginRec.imageData = this.context.getImageData(0, 0, this.width, this.height);
+        this.beginRec.x = canvasX
+        this.beginRec.y = canvasY
+        this.beginRec.imageData = this.context.getImageData(
+          0,
+          0,
+          this.width,
+          this.height
+        )
         // 存储本次绘制坐标信息
         this.drawInfo.push({
           x: canvasX / this.width,
           y: canvasY / this.height,
           type: this.lineType,
-        });
-        var imgData = this.context.getImageData(0, 0, this.width, (this.width * 9) / 16);
-        this.imgStack.push(imgData);
+        })
+        var imgData = this.context.getImageData(
+          0,
+          0,
+          this.width,
+          (this.width * 9) / 16
+        )
+        this.imgStack.push(imgData)
         if (this.lineType == 'pencel') {
-          this.beginDraw = true;
+          this.beginDraw = true
 
-          this.context.putImageData(this.beginRec.imageData, 0, 0);
-          this.context.save();
-          this.context.beginPath();
+          this.context.putImageData(this.beginRec.imageData, 0, 0)
+          this.context.save()
+          this.context.beginPath()
           // this.context.moveTo(e.layerX, e.layerY)
         } else if (this.lineType == 'circle') {
-          var imgData = this.context.getImageData(0, 0, this.width, this.height);
+          var imgData = this.context.getImageData(0, 0, this.width, this.height)
           // this.imgStack.push(imgData);
         } else if (this.lineType == 'rec') {
-          var imgData = this.context.getImageData(0, 0, this.width, this.height);
-          this.imgStack.push(imgData);
+          var imgData = this.context.getImageData(0, 0, this.width, this.height)
+          this.imgStack.push(imgData)
         } else if (this.lineType == 'arrowhead') {
-          this.beginDraw = true;
-          var imgData = this.context.getImageData(0, 0, this.width, this.height);
+          this.beginDraw = true
+          var imgData = this.context.getImageData(0, 0, this.width, this.height)
           // this.imgStack.push(imgData);
-          this.context.putImageData(this.beginRec.imageData, 0, 0);
-          this.context.save();
-          this.context.beginPath();
+          this.context.putImageData(this.beginRec.imageData, 0, 0)
+          this.context.save()
+          this.context.beginPath()
           this.beginArrowhead = {
             x: eLayerX,
             y: e.layerY,
-          };
+          }
         } else if (this.lineType == 'text') {
-          var imgData = this.context.getImageData(0, 0, this.width, this.height);
+          var imgData = this.context.getImageData(0, 0, this.width, this.height)
           // this.imgStack.push(imgData);
-          this.clearInputDom();
-          let x = eLayerX;
-          let y = e.layerY;
-          var textArea = this.createNewInput(x, e.layerX, y);
-          this.canvasMoveUse = false;
-          let _self = this;
+          this.clearInputDom()
+          let x = eLayerX
+          let y = e.layerY
+          var textArea = this.createNewInput(x, e.layerX, y)
+          this.canvasMoveUse = false
+          let _self = this
 
-          textArea.onblur = function() {
-            _self.drawText(textArea.value, x, y);
-          };
+          textArea.onblur = function () {
+            _self.drawText(textArea.value, x, y)
+          }
         }
       }
     },
     clearInputDom() {
-      var temp = document.getElementById('textAreaCanvas');
+      var temp = document.getElementById('textAreaCanvas')
       if (temp) {
-        document.getElementById('drawContext').removeChild(temp);
+        document.getElementById('drawContext').removeChild(temp)
       }
     },
     // hor横向 vrt纵向
     createNewInput(horX, vrtX, y) {
-      var textAreaDom = document.createElement('textarea');
-      var paddingDis = 3;
-      let x = this.isHorizontal ? horX + this.horOffset : vrtX;
+      var textAreaDom = document.createElement('textarea')
+      var paddingDis = 3
+      let x = this.isHorizontal ? horX + this.horOffset : vrtX
 
-      document.getElementById('drawContext').appendChild(textAreaDom);
-      textAreaDom.style.position = 'absolute';
-      textAreaDom.style.top = y - 15 + 'px';
-      textAreaDom.style.left = x - paddingDis + 'px';
-      textAreaDom.style.background = 'transparent';
-      textAreaDom.style.color = this.lineColor;
+      document.getElementById('drawContext').appendChild(textAreaDom)
+      textAreaDom.style.position = 'absolute'
+      textAreaDom.style.top = y - 15 + 'px'
+      textAreaDom.style.left = x - paddingDis + 'px'
+      textAreaDom.style.background = 'transparent'
+      textAreaDom.style.color = this.lineColor
       // textAreaDom.focus();
-      textAreaDom.style.font = 'italic small-caps bold 14px arial';
+      textAreaDom.style.font = 'italic small-caps bold 14px arial'
 
       // 新样式优化
-      textAreaDom.style.border = '1px solid ' + this.lineColor;
-      textAreaDom.style.padding = '1px ' + paddingDis + 'px';
+      textAreaDom.style.border = '1px solid ' + this.lineColor
+      textAreaDom.style.padding = '1px ' + paddingDis + 'px'
 
-      textAreaDom.id = 'textAreaCanvas';
+      textAreaDom.id = 'textAreaCanvas'
 
-      return textAreaDom;
+      return textAreaDom
     },
     // 鼠标移动时绘制
     canvasMove(e) {
-      let _self = this;
+      let _self = this
       if (this.canvasMoveUse && this.canDraw) {
-        this.context.strokeStyle = this.lineColor;
+        this.context.strokeStyle = this.lineColor
         // client是基于整个页面的坐标，offset是cavas距离pictureDetail顶部以及左边的距离
-        let eLayerX = e.layerX;
+        let eLayerX = e.layerX
         if (this.isHorizontal) {
-          eLayerX = e.layerX - this.horOffset;
+          eLayerX = e.layerX - this.horOffset
         } else {
-          eLayerX = e.layerX - parseInt((800 - this.width) / 2);
+          eLayerX = e.layerX - parseInt((800 - this.width) / 2)
         }
 
-        let canvasX = eLayerX;
-        let canvasY = e.layerY;
+        let canvasX = eLayerX
+        let canvasY = e.layerY
         if (this.lineType === 'rec') {
           // 绘制矩形时恢复起始点状态再重新绘制
 
-          this.context.putImageData(this.beginRec.imageData, 0, 0);
-          this.context.beginPath();
+          this.context.putImageData(this.beginRec.imageData, 0, 0)
+          this.context.beginPath()
           this.context.rect(
             this.beginRec.x,
             this.beginRec.y,
             canvasX - this.beginRec.x,
             canvasY - this.beginRec.y
-          );
-          let info = this.drawInfo[this.drawInfo.length - 1];
-          info.w = canvasX / this.width - info.x;
-          info.h = canvasY / this.height - info.y;
+          )
+          let info = this.drawInfo[this.drawInfo.length - 1]
+          info.w = canvasX / this.width - info.x
+          info.h = canvasY / this.height - info.y
         } else if (this.lineType === 'circle') {
           // 绘制椭圆时恢复起始点状态再重新绘制
 
-          this.context.putImageData(this.beginRec.imageData, 0, 0);
-          this.context.beginPath();
-          let a = (canvasX - this.beginRec.x) / 2;
-          let b = (canvasY - this.beginRec.y) / 2;
+          this.context.putImageData(this.beginRec.imageData, 0, 0)
+          this.context.beginPath()
+          let a = (canvasX - this.beginRec.x) / 2
+          let b = (canvasY - this.beginRec.y) / 2
           this.drawEllipse(
             this.context,
             this.beginRec.x + a,
             this.beginRec.y + b,
             a > 0 ? a : -a,
             b > 0 ? b : -b
-          );
-          let info = this.drawInfo[this.drawInfo.length - 1];
-          info.a = a / this.width;
-          info.b = b / this.height;
+          )
+          let info = this.drawInfo[this.drawInfo.length - 1]
+          info.a = a / this.width
+          info.b = b / this.height
         } else if (this.lineType == 'pencel') {
           if (this.beginDraw) {
-            this.context.lineTo(eLayerX, e.layerY);
-            this.context.stroke();
+            this.context.lineTo(eLayerX, e.layerY)
+            this.context.stroke()
           }
         } else if (this.lineType === 'arrowhead') {
           if (this.beginDraw) {
-            this.context.putImageData(this.beginRec.imageData, 0, 0);
-            this.context.beginPath();
-            this.context.fillStyle = this.lineColor;
-            this.context.fillArrow(this.beginArrowhead.x, this.beginArrowhead.y, eLayerX, e.layerY); // 或ctx.drawArrow(10, 10, 80, 100)
-            this.context.fill();
+            this.context.putImageData(this.beginRec.imageData, 0, 0)
+            this.context.beginPath()
+            this.context.fillStyle = this.lineColor
+            this.context.fillArrow(
+              this.beginArrowhead.x,
+              this.beginArrowhead.y,
+              eLayerX,
+              e.layerY
+            ) // 或ctx.drawArrow(10, 10, 80, 100)
+            this.context.fill()
           }
         } else if (this.lineType === 'text') {
-          this.canvasMoveUse = false;
+          this.canvasMoveUse = false
         }
-        this.context.stroke();
+        this.context.stroke()
       }
     },
     // 鼠标抬起
     canvasUp(e) {
       if (this.canDraw) {
-        this.canvasMoveUse = false;
+        this.canvasMoveUse = false
         if (this.lineType == 'pencel') {
           // this.context.closePath();
         } else if (this.lineType == 'arrowhead') {
-          this.context.closePath();
+          this.context.closePath()
         }
       }
     },
     drawText(text, x, y) {
-      var _self = this;
-      _self.context.textAlign = 'stleft art';
-      _self.context.font = 'italic small-caps bold 14px arial';
-      _self.context.fillStyle = _self.lineColor;
-      _self.context.fillText(text, x, y);
+      var _self = this
+      _self.context.textAlign = 'stleft art'
+      _self.context.font = 'italic small-caps bold 14px arial'
+      _self.context.fillStyle = _self.lineColor
+      _self.context.fillText(text, x, y)
     },
     // 绘制椭圆
     drawEllipse(context, x, y, a, b) {
-      context.save();
-      var r = a > b ? a : b;
-      var ratioX = a / r;
-      var ratioY = b / r;
-      context.scale(ratioX, ratioY);
-      context.beginPath();
-      context.arc(x / ratioX, y / ratioY, r, 0, 2 * Math.PI, false);
-      context.closePath();
-      context.restore();
+      context.save()
+      var r = a > b ? a : b
+      var ratioX = a / r
+      var ratioY = b / r
+      context.scale(ratioX, ratioY)
+      context.beginPath()
+      context.arc(x / ratioX, y / ratioY, r, 0, 2 * Math.PI, false)
+      context.closePath()
+      context.restore()
     },
     Area(p0, p1, p2) {
-      let area = 0.0;
-      area = p0.x * p1.y + p1.x * p2.y + p2.x * p0.y - p1.x * p0.y - p2.x * p1.y - p0.x * p2.y;
-      return area / 2;
+      let area = 0.0
+      area =
+        p0.x * p1.y +
+        p1.x * p2.y +
+        p2.x * p0.y -
+        p1.x * p0.y -
+        p2.x * p1.y -
+        p0.x * p2.y
+      return area / 2
     },
     // 计算多边形质心
     getPolygonAreaCenter(points) {
-      let sum_x = 0;
-      let sum_y = 0;
-      let sum_area = 0;
-      let p1 = points[1];
+      let sum_x = 0
+      let sum_y = 0
+      let sum_area = 0
+      let p1 = points[1]
       for (var i = 2; i < points.length; i++) {
-        let p2 = points[i];
-        let area = this.Area(points[0], p1, p2);
-        sum_area += area;
-        sum_x += (points[0].x + p1.x + p2.x) * area;
-        sum_y += (points[0].y + p1.y + p2.y) * area;
-        p1 = p2;
+        let p2 = points[i]
+        let area = this.Area(points[0], p1, p2)
+        sum_area += area
+        sum_x += (points[0].x + p1.x + p2.x) * area
+        sum_y += (points[0].y + p1.y + p2.y) * area
+        p1 = p2
       }
       return {
         x: sum_x / sum_area / 3,
         y: sum_y / sum_area / 3,
-      };
+      }
     },
     // 根据坐标信息绘制图形
     drawWithInfo() {
       this.info.forEach((item) => {
-        this.context.beginPath();
+        this.context.beginPath()
         if (!item.type) {
           // 设置颜色
-          this.context.strokeStyle = item.regionColor;
-          this.context.fillStyle = item.regionColor;
+          this.context.strokeStyle = item.regionColor
+          this.context.fillStyle = item.regionColor
           // 绘制多边形的边
           if (typeof item.region === 'string') {
-            item.region = JSON.parse(item.region);
+            item.region = JSON.parse(item.region)
           }
           item.region.forEach((point) => {
-            this.context.lineTo(point.x * this.width, point.y * this.height);
-          });
-          this.context.closePath();
+            this.context.lineTo(point.x * this.width, point.y * this.height)
+          })
+          this.context.closePath()
           // 在多边形质心标注文字
-          let point = this.getPolygonAreaCenter(item.region);
-          this.context.fillText(item.areaName, point.x * this.width, point.y * this.height);
+          let point = this.getPolygonAreaCenter(item.region)
+          this.context.fillText(
+            item.areaName,
+            point.x * this.width,
+            point.y * this.height
+          )
         } else if (item.type === 'rec') {
           this.context.rect(
             item.x * this.width,
             item.y * this.height,
             item.w * this.width,
             item.h * this.height
-          );
+          )
         } else if (item.type === 'circle') {
           this.drawEllipse(
             this.context,
@@ -469,45 +559,45 @@ export default {
             (item.y + item.b) * this.height,
             item.a > 0 ? item.a * this.width : -item.a * this.width,
             item.b > 0 ? item.b * this.height : -item.b * this.height
-          );
+          )
         }
-        this.context.stroke();
-      });
+        this.context.stroke()
+      })
     },
     saveDrawImage() {
-      this.imageBase64 = this.canvas.toDataURL('image/png');
-      this.$emit('getDrawImage', this.imageBase64, this.remarkContent || '');
-      this.drawContextDisplay = false;
-      this.$emit('getEditMode', true);
+      this.imageBase64 = this.canvas.toDataURL('image/png')
+      this.$emit('getDrawImage', this.imageBase64, this.remarkContent || '')
+      this.drawContextDisplay = false
+      this.$emit('getEditMode', true)
     },
     exitDrawImage() {
-      this.remarkContent = '';
-      this.drawContextDisplay = false;
-      this.$emit('getEditMode', true);
+      this.remarkContent = ''
+      this.drawContextDisplay = false
+      this.$emit('getEditMode', true)
     },
     /**
      * 修改画笔模式
      */
     changeCanvasMode(type) {
-      this.context.save;
-      this.clearInputDom();
-      this.beginDraw = false;
-      this.lineType = type;
-      this.canvasMoveUse = false;
+      this.context.save
+      this.clearInputDom()
+      this.beginDraw = false
+      this.lineType = type
+      this.canvasMoveUse = false
     },
-    undoDrawImage: function() {
-      this.clearInputDom();
+    undoDrawImage: function () {
+      this.clearInputDom()
       if (this.imgStack.length > 0) {
-        this.context.clearRect(0, 0, this.width, (this.width * 9) / 16);
-        var imgData = this.imgStack.pop();
-        this.context.putImageData(imgData, 0, 0);
+        this.context.clearRect(0, 0, this.width, (this.width * 9) / 16)
+        var imgData = this.imgStack.pop()
+        this.context.putImageData(imgData, 0, 0)
       } else {
-        this.initDraw();
+        this.initDraw()
         // this.$message.error('已经是最后一步了')
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
