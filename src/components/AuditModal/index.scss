@@ -241,7 +241,7 @@
 
     /* 第一个tab */
     .img-list {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 530px;
       padding-bottom: 56px;
 
@@ -454,6 +454,9 @@
 
     /* 第三个tab */
     .base-list {
+      height: 596px;
+      overflow-y: auto;
+
       .base-item {
         padding: 10px 0;
         line-height: 24px;
@@ -467,6 +470,22 @@
 
       .base-item+.base-item {
         border-top: 1px solid #ececec;
+      }
+
+      .log-box {
+        font-size: 14px;
+        color: #515a6e;
+        padding: 10px 12px 10px 0;
+        box-sizing: border-box;
+
+        .log-show {
+          padding: 7px;
+
+          .log-line {
+            padding-bottom: 4px;
+            line-height: 30px;
+          }
+        }
       }
     }
   }

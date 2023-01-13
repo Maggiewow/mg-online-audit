@@ -1,7 +1,14 @@
 <template>
   <Tabs v-model="tabKey">
-    <TabPane :label="`批注（${commentCount}）`" name="1">
-      <Form class="com-form" :model="commentItem" :label-width="0">
+    <TabPane
+      :label="`批注（${commentCount}）`"
+      name="1"
+    >
+      <Form
+        class="com-form"
+        :model="commentItem"
+        :label-width="0"
+      >
         <FormItem label="">
           <Button
             type="success"
@@ -9,31 +16,57 @@
             class="per-btn"
             :disabled="hideComment"
             @click="handleShot"
-            >插入批注</Button
-          >
+          >插入批注</Button>
         </FormItem>
         <!-- order_type sort_type is_resolve -->
-        <FormItem label="" prop="type" class="per-sel">
+        <FormItem
+          label=""
+          prop="type"
+          class="per-sel"
+        >
           <Select v-model="commentItem.order_type">
-            <Option v-for="{ value, label } in typeList" :value="value" :key="value">{{
+            <Option
+              v-for="{ value, label } in typeList"
+              :value="value"
+              :key="value"
+            >{{
               label
             }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="" prop="status" class="per-sel">
+        <FormItem
+          label=""
+          prop="status"
+          class="per-sel"
+        >
           <Select v-model="commentItem.is_resolve">
-            <Option v-for="{ value, label } in statusList" :value="value" :key="value">{{
+            <Option
+              v-for="{ value, label } in statusList"
+              :value="value"
+              :key="value"
+            >{{
               label
             }}</Option>
           </Select>
         </FormItem>
       </Form>
-      <ul class="img-list" ref="imgArr">
-        <li class="img-item" v-for="(item, index) in imgList" :key="item.id" :id="item.id">
+      <ul
+        class="img-list"
+        ref="imgArr"
+      >
+        <li
+          class="img-item"
+          v-for="(item, index) in imgList"
+          :key="item.id"
+          :id="item.id"
+        >
           <div class="opr-line">
             <div class="user">
               <div class="avatar-img">
-                <img :src="item.user.avatar" alt="" />
+                <img
+                  :src="item.user.avatar"
+                  alt=""
+                />
               </div>
               <p class="over_hide user-name blue-text">
                 {{ item.user.nickname }}
@@ -43,17 +76,19 @@
               </p>
             </div>
             <div class="opr-col">
-              <Button type="info" class="small-opr-btn" ghost @click="goReply(item, index)"
-                >回复</Button
-              >
+              <Button
+                type="info"
+                class="small-opr-btn"
+                ghost
+                @click="goReply(item, index)"
+              >回复</Button>
               <Button
                 v-if="curUserId === (item.user ? item.user.id : '')"
                 type="error"
                 class="small-opr-btn"
                 ghost
                 @click="goRemove(item, index)"
-                >删除</Button
-              >
+              >删除</Button>
               <Button
                 v-if="
                   item.status === '0' && curUserId === (basicInfo.user ? basicInfo.user.id : '')
@@ -62,8 +97,7 @@
                 class="small-opr-btn"
                 ghost
                 @click="goComplete(item, index)"
-                >完成</Button
-              >
+              >完成</Button>
             </div>
           </div>
 
@@ -87,12 +121,19 @@
               padding: item.child && item.child.length > 0 ? '10px 6px 10px 30px' : '0px',
             }"
           >
-            <li class="rep-item" v-for="(it, ind) in item.child" :key="it.id">
+            <li
+              class="rep-item"
+              v-for="(it, ind) in item.child"
+              :key="it.id"
+            >
               <div v-if="!it.replyShow">
                 <div class="rep-line">
                   <div class="user">
                     <div class="avatar-img">
-                      <img :src="it.user.avatar" alt="" />
+                      <img
+                        :src="it.user.avatar"
+                        alt=""
+                      />
                     </div>
                     <p class="over_hide user-name">
                       {{ it.user.nickname }}
@@ -107,26 +148,33 @@
                       class="small-opr-btn"
                       ghost
                       @click="goReplyComment(index, it, ind)"
-                      >回复</Button
-                    >
+                    >回复</Button>
                     <Button
                       v-if="curUserId === (it.user ? it.user.id : '')"
                       type="error"
                       class="small-opr-btn"
                       ghost
                       @click="goRemoveComment(index, it, ind)"
-                      >删除</Button
-                    >
+                    >删除</Button>
                   </div>
                 </div>
                 <div class="rep-main-cont">
-                  <span class="blue-text" v-if="it.reply_user">@{{ it.reply_user.nickname }}</span>
+                  <span
+                    class="blue-text"
+                    v-if="it.reply_user"
+                  >@{{ it.reply_user.nickname }}</span>
                   {{ it.content }}
                 </div>
               </div>
 
-              <div class="input-box" v-if="it.replyShow">
-                <span class="blue-text" v-if="it.reply_user">@{{ it.reply_user.nickname }}</span>
+              <div
+                class="input-box"
+                v-if="it.replyShow"
+              >
+                <span
+                  class="blue-text"
+                  v-if="it.reply_user"
+                >@{{ it.reply_user.nickname }}</span>
                 <Input
                   v-model="it.content"
                   :maxlength="200"
@@ -136,16 +184,18 @@
                   placeholder="请输入..."
                 />
                 <div class="inp-save">
-                  <Button type="info" class="small-opr-btn" ghost @click="cancelComReply(it, ind)"
-                    >取消</Button
-                  ><Button
+                  <Button
+                    type="info"
+                    class="small-opr-btn"
+                    ghost
+                    @click="cancelComReply(it, ind)"
+                  >取消</Button><Button
                     type="success"
                     class="small-opr-btn"
                     ghost
                     :loading="repLoading"
                     @click="saveComReply(it, ind)"
-                    >确定</Button
-                  >
+                  >确定</Button>
                 </div>
               </div>
             </li>
@@ -154,10 +204,16 @@
         <!--infinite-loading这个组件要放在列表的底部，滚动的盒子里面！-->
         <!-- spinner: 'default' | 'bubbles' | 'circles' | 'spiral' | 'waveDots' -->
         <infinite-loading @infinite="infiniteHandler">
-          <span slot="no-more" class="gray-text">{{
+          <span
+            slot="no-more"
+            class="gray-text"
+          >{{
             comLoading ? '加载中...' : '没有更多了'
           }}</span>
-          <span slot="no-results" class="gray-text">
+          <span
+            slot="no-results"
+            class="gray-text"
+          >
             {{
               comLoading
                 ? '加载中...'
@@ -169,9 +225,17 @@
         </infinite-loading>
       </ul>
     </TabPane>
-    <TabPane label="串联单" name="2" v-if="!fromSeries">
+    <TabPane
+      label="串联单"
+      name="2"
+      v-if="!fromSeries"
+    >
       <div class="series-list">
-        <div class="series-item" v-for="it in seriesList" :key="it.id">
+        <div
+          class="series-item"
+          v-for="it in seriesList"
+          :key="it.id"
+        >
           <p class="title-text">{{ it.cate_name }}</p>
           <div class="info-line">
             <p>责任编辑：{{ it.userData }}</p>
@@ -179,12 +243,18 @@
             <p class="time">{{ it.time }}</p>
           </div>
         </div>
-        <p class="gray-text middle" v-if="!seriesList || seriesList.length === 0">
+        <p
+          class="gray-text middle"
+          v-if="!seriesList || seriesList.length === 0"
+        >
           没有更多了
         </p>
       </div>
     </TabPane>
-    <TabPane label="基本信息" name="3">
+    <TabPane
+      label="基本信息"
+      name="3"
+    >
       <div class="base-list">
         <div class="base-item title-deep">名称：{{ basicInfo.file_name }}</div>
         <div class="base-item">上传时间：{{ basicInfo.created_at }}</div>
@@ -194,22 +264,51 @@
         <div class="base-item">视频格式：{{ basicInfo.file_type }}</div>
         <div class="base-item">关键词：{{ basicInfo.file_keyword }}</div>
         <div class="base-item">描述：{{ basicInfo.file_profile }}</div>
+
+        <div class="base-item log-box">
+          <p>历史下载记录：</p>
+          <div
+            v-if="logList&&logList.length>0"
+            class="log-show"
+          >
+            <div
+              class="log-line"
+              v-for="it in logList"
+              :key="it.id"
+            > {{ it.user.org_name||'' }}-{{ it.user.nickname||'' }}&ensp;{{ it.updated_at }}</div>
+          </div>
+          <div
+            v-else
+            class="log-show"
+          >暂无记录</div>
+        </div>
+
       </div>
     </TabPane>
   </Tabs>
 </template>
 
 <script>
-import InfiniteLoading from 'vue-infinite-loading';
-import { Tabs, TabPane, Button, Form, FormItem, Select, Option, Input } from 'view-design';
-import { Image } from 'element-ui';
+import InfiniteLoading from 'vue-infinite-loading'
+import {
+  Tabs,
+  TabPane,
+  Button,
+  Form,
+  FormItem,
+  Select,
+  Option,
+  Input,
+} from 'view-design'
+import { Image } from 'element-ui'
 
 import {
   getAuditHistory,
   replayVersionComment,
   removeVersionAudit,
   completeVersionAudit,
-} from '@/api/audit';
+  fetchDownloadLogs,
+} from '@/api/audit'
 
 export default {
   name: 'right-tabs',
@@ -270,7 +369,8 @@ export default {
       isEdit: false,
       curIndex: 0, // 当前评论的这一条批注的索引值
       repLoading: false,
-    };
+      logList: [],
+    }
   },
   components: {
     InfiniteLoading,
@@ -287,7 +387,7 @@ export default {
   watch: {
     commentItem: {
       handler() {
-        this.resetHistory();
+        this.resetHistory()
       },
       deep: true,
     },
@@ -295,88 +395,109 @@ export default {
   computed: {
     commentCount() {
       if (this.imgList && this.imgList.length > 0) {
-        return this.imgList.length;
+        return this.imgList.length
       }
 
-      return '0';
+      return '0'
     },
     curUserId() {
-      return this.userInfo.id || '';
+      return this.userInfo.id || ''
     },
     shotImageList() {
       // imgUrl frame_url
-      return this.imgList.map((t) => t.frame_url);
+      return this.imgList.map((t) => t.frame_url)
     },
   },
   methods: {
     calcFileSize(bytesize) {
-      let result = '';
+      let result = ''
       if (bytesize >= 1 * 1024 * 1024) {
-        result = (bytesize / (1024 * 1024)).toFixed(2) + 'MB';
+        result = (bytesize / (1024 * 1024)).toFixed(2) + 'MB'
       } else {
-        result = (bytesize / 1024).toFixed(2) + 'KB';
+        result = (bytesize / 1024).toFixed(2) + 'KB'
       }
-      return result;
+      return result
+    },
+    // 每次有更新 供外部调用的函数
+
+    refreshDownload() {
+      this.getDownloadLogInfo()
     },
     resetHistory() {
-      this.imgList = [];
-      this.page = 1;
-      this.totalPage = 0;
-      this.finished = false;
-      this.getHistory();
+      this.imgList = []
+      this.page = 1
+      this.totalPage = 0
+      this.finished = false
+      this.getHistory()
     },
     getHistory(cb) {
-      this.imgList = [];
-      this.totalPage = 0;
-      this.page = 1;
-      if (!this.version || this.version === '0') return;
+      this.imgList = []
+      this.totalPage = 0
+      this.page = 1
+      if (!this.version || this.version === '0') return
 
-      this.comLoading = true;
-      const { order_type, is_resolve } = this.commentItem;
-      let pageNow = this.page;
+      this.comLoading = true
+      const { order_type, is_resolve } = this.commentItem
+      let pageNow = this.page
 
-      getAuditHistory(this.fileId, this.version, this.page, order_type, is_resolve)
+      getAuditHistory(
+        this.fileId,
+        this.version,
+        this.page,
+        order_type,
+        is_resolve
+      )
         .then((res) => {
           if (res.status === 200 && pageNow === this.page) {
-            const { last_page, list } = res.data.data;
+            const { last_page, list } = res.data.data
             if (this.page === 1 && list.length > 0) {
-              this.imgList = [];
+              this.imgList = []
             }
 
             let arr = list.map((ele) => {
               if (ele.child && ele.child.length > 0) {
                 ele.child.forEach((it) => {
-                  it.replyShow = false;
-                });
+                  it.replyShow = false
+                })
               }
 
-              return ele;
-            });
-            this.isEdit = false;
-            this.imgList = this.imgList.concat(arr);
-            this.finished = this.page >= last_page;
-            this.totalPage = last_page;
-            this.page = pageNow + 1;
+              return ele
+            })
+            this.isEdit = false
+            this.imgList = this.imgList.concat(arr)
+            this.finished = this.page >= last_page
+            this.totalPage = last_page
+            this.page = pageNow + 1
           }
         })
         .finally(() => {
-          this.comLoading = false;
-          cb && cb();
-        });
+          this.comLoading = false
+          cb && cb()
+        })
+    },
+    // 下载记录
+    getDownloadLogInfo() {
+      console.log('下载记录', this.fileId)
+      this.fileId &&
+        fetchDownloadLogs(this.fileId).then((res) => {
+          if (res.status === 200) {
+            this.logList = res.data.data || []
+          }
+        })
     },
     infiniteHandler($state) {
       if (this.finished) {
-        $state.complete();
-        return false;
+        $state.complete()
+        return false
       }
 
       this.getHistory(() => {
-        this.finished ? $state.complete() : $state.loaded();
-      });
+        this.finished ? $state.complete() : $state.loaded()
+      })
     },
     // 通知父组件 插入批注
     handleShot() {
-      this.$emit('startMark');
+      this.$emit('startMark')
       // this.$refs.videoshot.handleMark();
     },
 
@@ -384,39 +505,39 @@ export default {
 
     // 点击保存批注时
     startSaveComment(formatItem) {
-      this.isEdit = true;
-      this.imgList.push(formatItem);
+      this.isEdit = true
+      this.imgList.push(formatItem)
     },
     // 保存批注之后 callback
     refreshList(res, cb) {
       if (res.status === 200) {
-        const { id = '' } = res.data.data;
-        this.$set(this.imgList[index], 'id', id);
-        this.isEdit = false;
+        const { id = '' } = res.data.data
+        this.$set(this.imgList[index], 'id', id)
+        this.isEdit = false
         this.$nextTick(() => {
-          cb && cb(this.imgList[index]);
-        });
+          cb && cb(this.imgList[index])
+        })
       } else {
-        this.delMarkImage(index);
-        this.$Message.warning(res.data.msg || '发布失败');
+        this.delMarkImage(index)
+        this.$Message.warning(res.data.msg || '发布失败')
       }
     },
 
     delMarkImage(index) {
-      this.imgList.splice(index, 1);
-      this.$emit('removeFrame', index);
+      this.imgList.splice(index, 1)
+      this.$emit('removeFrame', index)
       // let bH = document.body.offsetHeight;
     },
     // 给父级评论
     goReply(data, index) {
-      if (this.isEdit) return;
+      if (this.isEdit) return
 
-      this.curIndex = index;
+      this.curIndex = index
       let user = {
         id: this.userInfo.id,
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
-      };
+      }
       let replyItem = {
         id: 'newc',
         pid: data.id,
@@ -425,11 +546,11 @@ export default {
         user,
         reply_user: data.user,
         replyShow: true,
-      };
-      this.isEdit = true;
-      let children = this.imgList[this.curIndex].child || [];
-      children.push(replyItem);
-      this.$set(this.imgList[this.curIndex], 'child', children);
+      }
+      this.isEdit = true
+      let children = this.imgList[this.curIndex].child || []
+      children.push(replyItem)
+      this.$set(this.imgList[this.curIndex], 'child', children)
     },
     goRemove(data, index) {
       this.$Modal.confirm({
@@ -438,28 +559,28 @@ export default {
         loading: true,
         onOk: () => {
           if (data.id === 'new') {
-            this.delMarkImage(index);
-            this.$Message.info('操作成功');
-            this.$Modal.remove();
-            return;
+            this.delMarkImage(index)
+            this.$Message.info('操作成功')
+            this.$Modal.remove()
+            return
           }
 
           removeVersionAudit(data.id)
             .then((res) => {
-              this.delMarkImage(index);
-              this.$Message.info(res.data.msg || '操作成功');
+              this.delMarkImage(index)
+              this.$Message.info(res.data.msg || '操作成功')
             })
             .catch((err) => {
-              console.log('err', err);
+              console.log('err', err)
             })
             .finally(() => {
-              this.$Modal.remove();
-            });
+              this.$Modal.remove()
+            })
         },
-      });
+      })
     },
     goComplete(data, index) {
-      if (this.isEdit) return;
+      if (this.isEdit) return
 
       this.$Modal.confirm({
         title: '完成',
@@ -470,27 +591,27 @@ export default {
         onOk: () => {
           completeVersionAudit(data.id)
             .then((res) => {
-              this.$set(this.imgList[index], 'status', '1');
-              this.$Message.info(res.data.msg || '操作成功');
+              this.$set(this.imgList[index], 'status', '1')
+              this.$Message.info(res.data.msg || '操作成功')
             })
             .catch((err) => {
-              console.log('err', err);
+              console.log('err', err)
             })
             .finally(() => {
-              this.$Modal.remove();
-            });
+              this.$Modal.remove()
+            })
         },
-      });
+      })
     },
     goReplyComment(pIndex, data, index) {
-      if (this.isEdit) return;
+      if (this.isEdit) return
 
-      this.curIndex = pIndex;
+      this.curIndex = pIndex
       let user = {
         id: this.userInfo.id,
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
-      };
+      }
 
       let replyItem = {
         id: 'newc',
@@ -500,14 +621,14 @@ export default {
         user,
         reply_user: data.user,
         replyShow: true,
-      };
-      this.isEdit = true;
-      this.imgList[this.curIndex].child.push(replyItem);
+      }
+      this.isEdit = true
+      this.imgList[this.curIndex].child.push(replyItem)
     },
     delMarkReply(pIndex, index) {
-      let repList = this.imgList[pIndex].child;
-      repList.splice(index, 1);
-      this.$set(this.imgList[pIndex], 'child', repList);
+      let repList = this.imgList[pIndex].child
+      repList.splice(index, 1)
+      this.$set(this.imgList[pIndex], 'child', repList)
     },
     goRemoveComment(pIndex, data, index) {
       this.$Modal.confirm({
@@ -516,59 +637,59 @@ export default {
         loading: true,
         onOk: () => {
           if (data.id === 'newc') {
-            this.delMarkReply(pIndex, index);
-            this.$Message.info('操作成功');
-            this.$Modal.remove();
-            return;
+            this.delMarkReply(pIndex, index)
+            this.$Message.info('操作成功')
+            this.$Modal.remove()
+            return
           }
 
           removeVersionAudit(data.id)
             .then((res) => {
-              this.delMarkReply(pIndex, index);
-              this.$Message.info(res.data.msg || '操作成功');
+              this.delMarkReply(pIndex, index)
+              this.$Message.info(res.data.msg || '操作成功')
             })
             .catch((err) => {
-              console.log('err', err);
+              console.log('err', err)
             })
             .finally(() => {
-              this.$Modal.remove();
-            });
+              this.$Modal.remove()
+            })
         },
-      });
+      })
     },
     saveComReply(item, index) {
-      this.repLoading = true;
+      this.repLoading = true
       replayVersionComment(this.fileId, this.version, item.content, item.pid)
         .then((res) => {
-          const { id = '', created_at } = res.data.data;
+          const { id = '', created_at } = res.data.data
           let completeItem = {
             ...item,
             id,
             created_at,
             replyShow: false,
-          };
-          this.$set(this.imgList[this.curIndex].child, index, completeItem);
-          this.isEdit = false;
-          this.curIndex = null;
+          }
+          this.$set(this.imgList[this.curIndex].child, index, completeItem)
+          this.isEdit = false
+          this.curIndex = null
         })
         .catch((err) => {
-          console.log('err', err);
+          console.log('err', err)
         })
         .finally(() => {
-          this.repLoading = false;
-        });
+          this.repLoading = false
+        })
     },
     // 取消评论
     cancelComReply(data, index) {
-      if (!data.replyShow) return;
+      if (!data.replyShow) return
 
-      this.imgList[this.curIndex].child.splice(index, 1);
+      this.imgList[this.curIndex].child.splice(index, 1)
       // this.$set(this.imgList[this.curIndex].child[index], "replyShow", false);
-      this.curIndex = null;
-      this.isEdit = false;
+      this.curIndex = null
+      this.isEdit = false
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped></style>

@@ -4,7 +4,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-26 16:21:08
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-01-13 11:26:25
+ * @LastEditTime: 2023-01-13 14:28:14
  */
 import moment from 'moment'
 
@@ -138,15 +138,15 @@ export const dateFormat = (date, pattern = 'YYYY-MM-DD HH:mm:ss') => {
 
 export const downloadFile = (src) => {
   // 移除旧的节点
-  const oldNode = document.querySelector('#g-exportOrder-iframe')
+  const oldNode = document.querySelector('#g-exportOrder-iframes')
   if (oldNode) {
-    document.body.removeChild(document.querySelector('#g-exportOrder-iframe'))
+    document.body.removeChild(document.querySelector('#g-exportOrder-iframes'))
   }
 
   // 生成新节点，进行下载
   const iframe = document.createElement('iframe')
   iframe.style.display = 'none'
-  iframe.id = 'g-exportOrder-iframe'
+  iframe.id = 'g-exportOrder-iframes'
   iframe.src = src
   document.body.appendChild(iframe)
 }

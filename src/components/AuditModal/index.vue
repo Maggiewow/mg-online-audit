@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-01-13 11:25:15
+ * @LastEditTime: 2023-01-13 15:15:24
 -->
 <template>
   <div>
@@ -346,8 +346,8 @@ import UpdateVersion from './UpdateVersion'
 import RightTabs from './RightTabs'
 import SucaiUpload from '@/components/SucaiUpload'
 import InfiniteLoading from 'vue-infinite-loading'
-// downloadVideo
-import { setBase64toFile, downloadFile, calcPercent } from './util'
+// downloadFile
+import { setBase64toFile, calcPercent, downloadVideo } from './util'
 import {
   Modal,
   Tabs,
@@ -574,6 +574,7 @@ export default {
 
             setTimeout(() => {
               this.$refs.rightDom.resetHistory()
+              this.$refs.rightDom.refreshDownload()
             }, 500)
 
             this.basicInfo = basic
@@ -758,9 +759,13 @@ export default {
         .then((res) => {
           // 如果该时段内暂无相关内容 直接res为undefined 全局的297错误码拦截
           if (res && res.data.data.url) {
-            // downloadVideo(res.data.data.url, this.playInfo.name);
-            let src = res.data.data.url + '?filename=' + this.playInfo.name
-            downloadFile(src)
+            downloadVideo(res.data.data.url, this.playInfo.name)
+            // let src = res.data.data.url + '?filename=' + this.playInfo.name
+            // downloadFile(src)
+
+            setTimeout(() => {
+              this.$refs.rightDom.refreshDownload()
+            }, 500)
           } else {
             this.$Message.warning(res.data.msg || '获取下载地址失败')
           }
