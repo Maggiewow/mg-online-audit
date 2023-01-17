@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-23 09:48:43
- * @LastEditTime: 2023-01-13 14:44:51
+ * @LastEditTime: 2023-01-17 09:57:32
  * @LastEditors: 赵婷婷
  * @Description: In User Settings Edit
  * @FilePath: \sucai-modal\src\views\Home.vue
@@ -21,6 +21,8 @@
       :privList="privList"
       :fromSeries="fromSeries"
       :seriesArticleContent="seriesArticleContent"
+      :showLogs="showLogs"
+      :requestUrlObj="requestUrlObj"
     >
       <!-- <template #toolbar>
         <Button type="info" size="small" class="per-btn" @click="handleChangeFile">上一条</Button>
@@ -59,6 +61,17 @@ export default {
       fromSeries: false,
       noCommentAccess: false,
       seriesArticleContent: '',
+      showLogs: false,
+      // requestUrlObj: {
+      //   sucaiUrl: 'https://shandianyun-sck.iqilu.com',
+      //   articleUrl: 'https://shandianyun-article.iqilu.com',
+      //   seriesUrl: 'https://shandianyun-series.iqilu.com',
+      // },
+      requestUrlObj: {
+        sucaiUrl: 'https://sucai.shandian8.com',
+        articleUrl: 'https://article.shandian8.com',
+        seriesUrl: 'https://series.shandian8.com',
+      },
     }
   },
   mounted() {

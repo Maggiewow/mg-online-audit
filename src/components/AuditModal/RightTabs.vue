@@ -265,7 +265,10 @@
         <div class="base-item">关键词：{{ basicInfo.file_keyword }}</div>
         <div class="base-item">描述：{{ basicInfo.file_profile }}</div>
 
-        <div class="base-item log-box">
+        <div
+          v-if="showLogs"
+          class="base-item log-box"
+        >
           <p>历史下载记录：</p>
           <div
             v-if="logList&&logList.length>0"
@@ -343,6 +346,10 @@ export default {
       default: {},
     },
     hideComment: {
+      type: Boolean,
+      default: false,
+    },
+    showLogs: {
       type: Boolean,
       default: false,
     },

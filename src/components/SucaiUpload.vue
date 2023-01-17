@@ -15,14 +15,14 @@
 
 <script>
 import SucaiModalNext from 'sucai-modal-next'
-import { SUCAI_URL } from '@/libs/constant'
+// import { SUCAI_URL } from '@/libs/constant'
 
 export default {
   name: 'sucai-upload',
   props: {},
   data() {
     return {
-      baseUrl: SUCAI_URL + '/',
+      baseUrl: this.$store.state.user.baseUrlObj.sucai + '/',
       websocketUrl: 'wss://shandianyun-sck.iqilu.com/',
       // 视频上传
       uploadPop: false,

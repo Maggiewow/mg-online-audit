@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-01-13 15:15:24
+ * @LastEditTime: 2023-01-17 10:24:50
 -->
 <template>
   <div>
@@ -294,6 +294,7 @@
             :seriesList="seriesList"
             :basicInfo="basicInfo"
             :hideComment="noCommentAccess || !isTranscodeUrl"
+            :showLogs="showLogs"
             @startMark="handleShot"
             @removeFrame="handleRemoveFrame"
           />
@@ -474,6 +475,18 @@ export default {
       type: Boolean,
       default: false,
     },
+    showLogs: {
+      type: Boolean,
+      default: false,
+    },
+    requestUrlObj: {
+      type: Object,
+      default: {
+        sucai: '',
+        article: '',
+        series: '',
+      },
+    },
   },
   watch: {
     auditModal(bool) {
@@ -483,6 +496,23 @@ export default {
     },
     articleKey() {
       this.getArticles()
+    },
+    requestUrlObj: {
+      handler(obj) {
+        console.log('requestUrlObj', this.requestUrlObj)
+        // const {
+        //   sucai = 'https://shandianyun-sck.iqilu.com',
+        //   article = 'https://shandianyun-article.iqilu.com',
+        //   series = 'https://shandianyun-series.iqilu.com',
+        // } = obj
+        // let reqUrls = { sucai, article, series }
+        // console.log('有参数', reqUrls)
+        this.$store.commit('setBaseUrlObj', this.requestUrlObj)
+        setTimeout(() => {
+          console.log('有参数123', this.$store.state.user.baseUrlObj)
+        }, 600)
+      },
+      immediate: true,
     },
   },
   computed: {
@@ -574,7 +604,7 @@ export default {
 
             setTimeout(() => {
               this.$refs.rightDom.resetHistory()
-              this.$refs.rightDom.refreshDownload()
+              this.showLogs && this.$refs.rightDom.refreshDownload()
             }, 500)
 
             this.basicInfo = basic

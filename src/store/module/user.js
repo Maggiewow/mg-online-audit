@@ -7,28 +7,36 @@ export default {
     avatorImgPath: '',
     access: '',
     drawState: false,
+    baseUrlObj: {
+      sucai: '',
+      article: '',
+      series: '',
+    },
   },
   mutations: {
     setUserInfo(state, userInfo) {
-      state.userInfo = userInfo;
+      state.userInfo = userInfo
     },
     setAvator(state, avatorPath) {
-      state.avatorImgPath = avatorPath;
+      state.avatorImgPath = avatorPath
     },
     setUserId(state, id) {
-      state.userId = id;
+      state.userId = id
     },
     setOrgid(state, orgid) {
-      state.orgid = orgid;
+      state.orgid = orgid
     },
     setUserName(state, name) {
-      state.userName = name;
+      state.userName = name
     },
     setAccess(state, access) {
-      state.access = access;
+      state.access = access
     },
     setDrawState(state, drawState) {
-      state.drawState = Boolean(drawState);
+      state.drawState = Boolean(drawState)
+    },
+    setBaseUrlObj(state, baseUrlObj) {
+      state.baseUrlObj = baseUrlObj
     },
   },
   getters: {},
@@ -64,4 +72,4 @@ export default {
     //   })
     // }
   },
-};
+}
