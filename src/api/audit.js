@@ -4,7 +4,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-06-11 11:21:51
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-01-17 10:19:54
+ * @LastEditTime: 2023-01-17 11:43:54
  */
 // import axios from '@/libs/api.request';
 // import { getToken } from '@/libs/util';
@@ -14,8 +14,13 @@ import commonAxios from 'ym-bridge-shandianyun'
 
 import store from '@/store'
 const getSucaiUrl = () => {
-  const { sucai = '' } = store.state.user.baseUrlObj
-  return sucai
+  try {
+    const { sucai = '' } = store.state.user.baseUrlObj
+    return sucai
+  } catch (err) {
+    console.log(err)
+    return ''
+  }
 }
 
 const Formdata_Headers = {

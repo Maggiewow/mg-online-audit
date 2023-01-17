@@ -22,7 +22,9 @@ export default {
   props: {},
   data() {
     return {
-      baseUrl: this.$store.state.user.baseUrlObj.sucai + '/',
+      baseUrl: this.$store.state.user.baseUrlObj
+        ? this.$store.state.user.baseUrlObj.sucai + '/'
+        : '',
       websocketUrl: 'wss://shandianyun-sck.iqilu.com/',
       // 视频上传
       uploadPop: false,
@@ -34,6 +36,11 @@ export default {
     }
   },
   components: { SucaiModalNext },
+  mounted() {
+    this.baseUrl = this.$store.state.user.baseUrlObj
+      ? this.$store.state.user.baseUrlObj.sucai + '/'
+      : ''
+  },
   methods: {
     // 打开视频modal
     uploadVideo() {

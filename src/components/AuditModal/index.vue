@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-01-17 10:24:50
+ * @LastEditTime: 2023-01-17 11:24:16
 -->
 <template>
   <div>
@@ -499,18 +499,7 @@ export default {
     },
     requestUrlObj: {
       handler(obj) {
-        console.log('requestUrlObj', this.requestUrlObj)
-        // const {
-        //   sucai = 'https://shandianyun-sck.iqilu.com',
-        //   article = 'https://shandianyun-article.iqilu.com',
-        //   series = 'https://shandianyun-series.iqilu.com',
-        // } = obj
-        // let reqUrls = { sucai, article, series }
-        // console.log('有参数', reqUrls)
-        this.$store.commit('setBaseUrlObj', this.requestUrlObj)
-        setTimeout(() => {
-          console.log('有参数123', this.$store.state.user.baseUrlObj)
-        }, 600)
+        this.$store.commit('setBaseUrlObj', obj)
       },
       immediate: true,
     },
