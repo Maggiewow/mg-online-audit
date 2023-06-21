@@ -1,14 +1,7 @@
 <template>
   <Tabs v-model="tabKey">
-    <TabPane
-      :label="`批注（${commentCount}）`"
-      name="1"
-    >
-      <Form
-        class="com-form"
-        :model="commentItem"
-        :label-width="0"
-      >
+    <TabPane :label="`批注（${commentCount}）`" name="1">
+      <Form class="com-form" :model="commentItem" :label-width="0">
         <FormItem label="">
           <Button
             type="success"
@@ -16,57 +9,31 @@
             class="per-btn"
             :disabled="hideComment"
             @click="handleShot"
-          >插入批注</Button>
+            >插入批注</Button
+          >
         </FormItem>
         <!-- order_type sort_type is_resolve -->
-        <FormItem
-          label=""
-          prop="type"
-          class="per-sel"
-        >
+        <FormItem label="" prop="type" class="per-sel">
           <Select v-model="commentItem.order_type">
-            <Option
-              v-for="{ value, label } in typeList"
-              :value="value"
-              :key="value"
-            >{{
+            <Option v-for="{ value, label } in typeList" :value="value" :key="value">{{
               label
             }}</Option>
           </Select>
         </FormItem>
-        <FormItem
-          label=""
-          prop="status"
-          class="per-sel"
-        >
+        <FormItem label="" prop="status" class="per-sel">
           <Select v-model="commentItem.is_resolve">
-            <Option
-              v-for="{ value, label } in statusList"
-              :value="value"
-              :key="value"
-            >{{
+            <Option v-for="{ value, label } in statusList" :value="value" :key="value">{{
               label
             }}</Option>
           </Select>
         </FormItem>
       </Form>
-      <ul
-        class="img-list"
-        ref="imgArr"
-      >
-        <li
-          class="img-item"
-          v-for="(item, index) in imgList"
-          :key="item.id"
-          :id="item.id"
-        >
+      <ul class="img-list" ref="imgArr">
+        <li class="img-item" v-for="(item, index) in imgList" :key="item.id" :id="item.id">
           <div class="opr-line">
             <div class="user">
               <div class="avatar-img">
-                <img
-                  :src="item.user.avatar"
-                  alt=""
-                />
+                <img :src="item.user.avatar" alt="" />
               </div>
               <p class="over_hide user-name blue-text">
                 {{ item.user.nickname }}
@@ -76,19 +43,17 @@
               </p>
             </div>
             <div class="opr-col">
-              <Button
-                type="info"
-                class="small-opr-btn"
-                ghost
-                @click="goReply(item, index)"
-              >回复</Button>
+              <Button type="info" class="small-opr-btn" ghost @click="goReply(item, index)"
+                >回复</Button
+              >
               <Button
                 v-if="curUserId === (item.user ? item.user.id : '')"
                 type="error"
                 class="small-opr-btn"
                 ghost
                 @click="goRemove(item, index)"
-              >删除</Button>
+                >删除</Button
+              >
               <Button
                 v-if="
                   item.status === '0' && curUserId === (basicInfo.user ? basicInfo.user.id : '')
@@ -97,7 +62,8 @@
                 class="small-opr-btn"
                 ghost
                 @click="goComplete(item, index)"
-              >完成</Button>
+                >完成</Button
+              >
             </div>
           </div>
 
@@ -121,19 +87,12 @@
               padding: item.child && item.child.length > 0 ? '10px 6px 10px 30px' : '0px',
             }"
           >
-            <li
-              class="rep-item"
-              v-for="(it, ind) in item.child"
-              :key="it.id"
-            >
+            <li class="rep-item" v-for="(it, ind) in item.child" :key="it.id">
               <div v-if="!it.replyShow">
                 <div class="rep-line">
                   <div class="user">
                     <div class="avatar-img">
-                      <img
-                        :src="it.user.avatar"
-                        alt=""
-                      />
+                      <img :src="it.user.avatar" alt="" />
                     </div>
                     <p class="over_hide user-name">
                       {{ it.user.nickname }}
@@ -148,33 +107,26 @@
                       class="small-opr-btn"
                       ghost
                       @click="goReplyComment(index, it, ind)"
-                    >回复</Button>
+                      >回复</Button
+                    >
                     <Button
                       v-if="curUserId === (it.user ? it.user.id : '')"
                       type="error"
                       class="small-opr-btn"
                       ghost
                       @click="goRemoveComment(index, it, ind)"
-                    >删除</Button>
+                      >删除</Button
+                    >
                   </div>
                 </div>
                 <div class="rep-main-cont">
-                  <span
-                    class="blue-text"
-                    v-if="it.reply_user"
-                  >@{{ it.reply_user.nickname }}</span>
+                  <span class="blue-text" v-if="it.reply_user">@{{ it.reply_user.nickname }}</span>
                   {{ it.content }}
                 </div>
               </div>
 
-              <div
-                class="input-box"
-                v-if="it.replyShow"
-              >
-                <span
-                  class="blue-text"
-                  v-if="it.reply_user"
-                >@{{ it.reply_user.nickname }}</span>
+              <div class="input-box" v-if="it.replyShow">
+                <span class="blue-text" v-if="it.reply_user">@{{ it.reply_user.nickname }}</span>
                 <Input
                   v-model="it.content"
                   :maxlength="200"
@@ -184,18 +136,16 @@
                   placeholder="请输入..."
                 />
                 <div class="inp-save">
-                  <Button
-                    type="info"
-                    class="small-opr-btn"
-                    ghost
-                    @click="cancelComReply(it, ind)"
-                  >取消</Button><Button
+                  <Button type="info" class="small-opr-btn" ghost @click="cancelComReply(it, ind)"
+                    >取消</Button
+                  ><Button
                     type="success"
                     class="small-opr-btn"
                     ghost
                     :loading="repLoading"
                     @click="saveComReply(it, ind)"
-                  >确定</Button>
+                    >确定</Button
+                  >
                 </div>
               </div>
             </li>
@@ -204,16 +154,10 @@
         <!--infinite-loading这个组件要放在列表的底部，滚动的盒子里面！-->
         <!-- spinner: 'default' | 'bubbles' | 'circles' | 'spiral' | 'waveDots' -->
         <infinite-loading @infinite="infiniteHandler">
-          <span
-            slot="no-more"
-            class="gray-text"
-          >{{
+          <span slot="no-more" class="gray-text">{{
             comLoading ? '加载中...' : '没有更多了'
           }}</span>
-          <span
-            slot="no-results"
-            class="gray-text"
-          >
+          <span slot="no-results" class="gray-text">
             {{
               comLoading
                 ? '加载中...'
@@ -225,17 +169,9 @@
         </infinite-loading>
       </ul>
     </TabPane>
-    <TabPane
-      label="串联单"
-      name="2"
-      v-if="!fromSeries"
-    >
+    <TabPane label="串联单" name="2" v-if="!fromSeries">
       <div class="series-list">
-        <div
-          class="series-item"
-          v-for="it in seriesList"
-          :key="it.id"
-        >
+        <div class="series-item" v-for="it in seriesList" :key="it.id">
           <p class="title-text">{{ it.cate_name }}</p>
           <div class="info-line">
             <p>责任编辑：{{ it.userData }}</p>
@@ -243,18 +179,12 @@
             <p class="time">{{ it.time }}</p>
           </div>
         </div>
-        <p
-          class="gray-text middle"
-          v-if="!seriesList || seriesList.length === 0"
-        >
+        <p class="gray-text middle" v-if="!seriesList || seriesList.length === 0">
           没有更多了
         </p>
       </div>
     </TabPane>
-    <TabPane
-      label="基本信息"
-      name="3"
-    >
+    <TabPane label="基本信息" name="3">
       <div class="base-list">
         <div class="base-item title-deep">名称：{{ basicInfo.file_name }}</div>
         <div class="base-item">上传时间：{{ basicInfo.created_at }}</div>
@@ -265,27 +195,15 @@
         <div class="base-item">关键词：{{ basicInfo.file_keyword }}</div>
         <div class="base-item">描述：{{ basicInfo.file_profile }}</div>
 
-        <div
-          v-if="showLogs"
-          class="base-item log-box"
-        >
+        <div v-if="showLogs" class="base-item log-box">
           <p>历史下载记录：</p>
-          <div
-            v-if="logList&&logList.length>0"
-            class="log-show"
-          >
-            <div
-              class="log-line"
-              v-for="it in logList"
-              :key="it.id"
-            > {{ it.user.org_name||'' }}-{{ it.user.nickname||'' }}&ensp;{{ it.updated_at }}</div>
+          <div v-if="logList && logList.length > 0" class="log-show">
+            <div class="log-line" v-for="it in logList" :key="it.id">
+              {{ it.user.org_name || '' }}-{{ it.user.nickname || '' }}&ensp;{{ it.updated_at }}
+            </div>
           </div>
-          <div
-            v-else
-            class="log-show"
-          >暂无记录</div>
+          <div v-else class="log-show">暂无记录</div>
         </div>
-
       </div>
     </TabPane>
   </Tabs>
@@ -293,16 +211,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import {
-  Tabs,
-  TabPane,
-  Button,
-  Form,
-  FormItem,
-  Select,
-  Option,
-  Input,
-} from 'view-design'
+import { Tabs, TabPane, Button, Form, FormItem, Select, Option, Input } from 'view-design'
 import { Image } from 'element-ui'
 
 import {
@@ -447,13 +356,7 @@ export default {
       const { order_type, is_resolve } = this.commentItem
       let pageNow = this.page
 
-      getAuditHistory(
-        this.fileId,
-        this.version,
-        this.page,
-        order_type,
-        is_resolve
-      )
+      getAuditHistory(this.fileId, this.version, this.page, order_type, is_resolve)
         .then((res) => {
           if (res.status === 200 && pageNow === this.page) {
             const { last_page, list } = res.data.data
@@ -516,7 +419,7 @@ export default {
       this.imgList.push(formatItem)
     },
     // 保存批注之后 callback
-    refreshList(res, cb) {
+    refreshList(res, index, cb) {
       if (res.status === 200) {
         const { id = '' } = res.data.data
         this.$set(this.imgList[index], 'id', id)

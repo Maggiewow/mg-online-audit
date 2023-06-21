@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-01-17 11:24:16
+ * @LastEditTime: 2023-03-09 14:24:44
 -->
 <template>
   <div>
@@ -22,34 +22,18 @@
       :z-index="1002"
       :mask-closable="false"
     >
-      <div
-        class="modal-inner-mask"
-        v-if="maskShow"
-      ></div>
+      <div class="modal-inner-mask" v-if="maskShow"></div>
       <div class="title-opr-line">
-        <Form
-          class="set-form"
-          :model="formItem"
-          :label-width="0"
-        >
+        <Form class="set-form" :model="formItem" :label-width="0">
           <FormItem label="">
             <!-- 串联单 插槽 -->
             <slot name="toolbar"></slot>
           </FormItem>
-          <FormItem
-            label=""
-            prop="version"
-            class="per-sel"
-          >
-            <Select
-              v-model="formItem.version"
-              @on-change="handleVersionChange"
-            >
-              <Option
-                v-for="{ version } in versionList"
-                :value="version"
-                :key="version"
-              >v{{ version }}</Option>
+          <FormItem label="" prop="version" class="per-sel">
+            <Select v-model="formItem.version" @on-change="handleVersionChange">
+              <Option v-for="{ version } in versionList" :value="version" :key="version"
+                >v{{ version }}</Option
+              >
             </Select>
           </FormItem>
           <!-- <FormItem label="" prop="state" class="per-sel">
@@ -72,48 +56,27 @@
               size="small"
               class="per-btn"
               @click="handleUpdateVersion"
-            >更新版本</Button>
-
-            <Poptip
-              trigger="hover"
-              v-if="!fromSeries"
+              >更新版本</Button
             >
-              <Button
-                type="success"
-                size="small"
-                class="per-btn"
-              >
+
+            <Poptip trigger="hover" v-if="!fromSeries">
+              <Button type="success" size="small" class="per-btn">
                 更多&nbsp;
                 <Icon type="ios-more" />
               </Button>
-              <div
-                class="other-btns"
-                slot="content"
-              >
-                <p
-                  v-if="privList.includes('bindArticle')"
-                  class="btn"
-                  @click="handleChooseManu"
-                >
+              <div class="other-btns" slot="content">
+                <p v-if="privList.includes('bindArticle')" class="btn" @click="handleChooseManu">
                   关联文稿
                 </p>
-                <p
-                  v-if="privList.includes('bindSeries')"
-                  class="btn"
-                  @click="handleChooseSeries"
-                >
+                <p v-if="privList.includes('bindSeries')" class="btn" @click="handleChooseSeries">
                   关联串联单
                 </p>
-                <Button
-                  class="btn"
-                  :loading="lowcodeLoading"
-                  @click="handleDownload('lowcode')"
-                >下载低码视频</Button>
-                <Button
-                  class="btn"
-                  :loading="originLoading"
-                  @click="handleDownload('origin')"
-                >下载原视频</Button>
+                <Button class="btn" :loading="lowcodeLoading" @click="handleDownload('lowcode')"
+                  >下载低码视频</Button
+                >
+                <Button class="btn" :loading="originLoading" @click="handleDownload('origin')"
+                  >下载原视频</Button
+                >
                 <!-- 当前视频的发布者 v-if="" -->
                 <p
                   class="btn"
@@ -127,10 +90,7 @@
           </FormItem>
         </Form>
 
-        <h2
-          class="weight-title over_hide_2"
-          :title="playInfo.name"
-        >
+        <h2 class="weight-title over_hide_2" :title="playInfo.name">
           &nbsp;{{ playInfo.name || '' }}
         </h2>
       </div>
@@ -152,32 +112,20 @@
             alt=""
           />
           <!-- 显示批注节点的进度条 未转码视频不能批注 所以不展示 -->
-          <div
-            class="progress-bar"
-            v-if="isTranscodeUrl"
-          >
+          <div class="progress-bar" v-if="isTranscodeUrl">
             <p class="time-show">0帧 / 00:00</p>
             <div class="slider-line">
-              <el-slider
-                :value="100"
-                disabled
-              ></el-slider>
+              <el-slider :value="100" disabled></el-slider>
               <div class="all-dots">
                 <div
                   v-show="allFrames && allFrames.length > 0"
                   v-for="(it, i) in allFrames"
                   :key="i"
                 >
-                  <el-tooltip
-                    placement="top"
-                    popper-class="circle-border"
-                  >
+                  <el-tooltip placement="top" popper-class="circle-border">
                     <div slot="content">
                       <div class="person-img">
-                        <img
-                          :src="it.avatar"
-                          alt=""
-                        />
+                        <img :src="it.avatar" alt="" />
                       </div>
                     </div>
                     <div
@@ -192,68 +140,31 @@
             <p class="time-show">{{ durationCount.frame }}帧 / {{ durationCount.duration }}</p>
           </div>
 
-          <div
-            class="main-article"
-            v-if="fromSeries"
-          >
-            <div
-              class="red-tips"
-              v-if="transcodeing"
-            >*视频转码中，请稍后...</div>
-            <div
-              class="red-tips"
-              v-else-if="!isTranscodeUrl"
-            >
+          <div class="main-article" v-if="fromSeries">
+            <div class="red-tips" v-if="transcodeing">*视频转码中，请稍后...</div>
+            <div class="red-tips" v-else-if="!isTranscodeUrl">
               <span>*视频转码中，请稍后刷新重试&ensp;</span>
-              <Button
-                :loading="isLoading"
-                size="small"
-                @click="() => getDetail()"
-              >刷新</Button>
+              <Button :loading="isLoading" size="small" @click="() => getDetail()">刷新</Button>
             </div>
             <!-- 文稿内容 -->
             <Tabs>
-              <TabPane
-                label="文稿"
-                name="1"
-              ></TabPane>
+              <TabPane label="文稿" name="1"></TabPane>
             </Tabs>
-            <div
-              class="content-text"
-              v-html="seriesArticleContent"
-            ></div>
+            <div class="content-text" v-html="seriesArticleContent"></div>
           </div>
-          <div
-            class="main-article"
-            v-else
-          >
+          <div class="main-article" v-else>
             <Tabs v-model="articleKey">
-              <TabPane
-                label="文稿"
-                name="1"
-              ></TabPane>
-              <TabPane
-                label="串联单文稿"
-                name="2"
-              ></TabPane>
+              <TabPane label="文稿" name="1"></TabPane>
+              <TabPane label="串联单文稿" name="2"></TabPane>
             </Tabs>
             <ul>
-              <li
-                class="article-col"
-                v-for="(item, index) in displayList"
-                :key="item.id"
-              >
+              <li class="article-col" v-for="(item, index) in displayList" :key="item.id">
                 <div class="art-title-line">
                   <p class="big-text">{{ item.title }}</p>
-                  <Button
-                    type="primary"
-                    v-if="item.isFold"
-                    @click="handleOpen(index)"
-                  >展开全部</Button>
-                  <Button
-                    v-else
-                    @click="handleClose(index)"
-                  >收起内容</Button>
+                  <Button type="primary" v-if="item.isFold" @click="handleOpen(index)"
+                    >展开全部</Button
+                  >
+                  <Button v-else @click="handleClose(index)">收起内容</Button>
                 </div>
 
                 <div v-if="item.series_info && item.series_info.length > 0">
@@ -274,10 +185,7 @@
                   v-html="item.content"
                 ></div>
               </li>
-              <p
-                class="no-content"
-                v-if="!displayList || displayList.length === 0"
-              >
+              <p class="no-content" v-if="!displayList || displayList.length === 0">
                 {{ displayLoading ? '加载中...' : '暂无关联文稿' }}
               </p>
             </ul>
@@ -323,11 +231,7 @@
     ></update-version>
     <!-- 重新用一个上传组件 调用转码 审片用的是转码视频，通过之后是原视频 -->
     <!-- 创建人-更新版本-上传 没有批注功能；审核人-批注 没有更新版本功能 -->
-    <sucai-upload
-      ref="uploadDom"
-      @setTranscodeStatus="setTranscode"
-      @uploadOk="setVideoUrl"
-    />
+    <sucai-upload ref="uploadDom" @setTranscodeStatus="setTranscode" @uploadOk="setVideoUrl" />
   </div>
 </template>
 
@@ -566,11 +470,7 @@ export default {
 
       getSucaiVersionDetail(file_id, initVersion)
         .then((res) => {
-          if (
-            res.data.msg &&
-            res.data.msg.msg &&
-            res.data.msg.msg === '登录过期'
-          ) {
+          if (res.data.msg && res.data.msg.msg && res.data.msg.msg === '登录过期') {
             this.$Message.warning('登录过期，请重试')
 
             return
@@ -585,8 +485,7 @@ export default {
             // 竖屏视频 url = 'https://stream7-transcode.iqilu.com/1/sucaiku/202104/28/ed24825f209642d789ef2d054459eab4.mp4';
             // created_at file_duration file_name file_size file_type user
             if (!initVersion || initVersion === '0') {
-              let lastestVersion =
-                versions.length > 0 ? versions[0].version : '0'
+              let lastestVersion = versions.length > 0 ? versions[0].version : '0'
               this.$set(this.formItem, 'version', lastestVersion)
               this.formItem.version = lastestVersion
             }
@@ -607,10 +506,8 @@ export default {
             const { article = [], series_item = [], series = [] } = bindings
             // 文稿 article: [{source_id: "3220"}] series: [{source_id: "45"}]
             // 串联单文稿 series_item: [{source_id: "12", series_id: "3", remote_item_id: ""},…]
-            this.bindArticles =
-              article.map(({ source_id }) => Number(source_id)) || []
-            this.bindSerieArticles =
-              series_item.map(({ source_id }) => Number(source_id)) || []
+            this.bindArticles = article.map(({ source_id }) => Number(source_id)) || []
+            this.bindSerieArticles = series_item.map(({ source_id }) => Number(source_id)) || []
 
             this.bindSeriesInfo = series.map(({ source_id }) => source_id) || [] // 整个串联单
             !this.fromSeries && this.getSeriesList()
@@ -687,8 +584,7 @@ export default {
         nickname: this.userInfo.nickname,
       }
 
-      const { currentPosition, currentFrame, imgUrl, percent, content } =
-        imageItem
+      const { currentPosition, currentFrame, imgUrl, percent, content } = imageItem
       let frame_time = parseInt(currentPosition)
       let formatItem = {
         id: 'new',
@@ -716,21 +612,14 @@ export default {
       this.saveLoading = true
       const { frame_url, content, frame_time, frame_pos } = data
       let file = setBase64toFile(frame_url, frame_time + 's', 'image/jpeg')
-      createVersionComment(
-        this.fileId,
-        this.formItem.version,
-        content,
-        frame_time,
-        frame_pos,
-        file
-      )
+      createVersionComment(this.fileId, this.formItem.version, content, frame_time, frame_pos, file)
         .then((res) => {
           if (res.status === 200) {
             const { id = '' } = res.data.data
             this.$set(this.allFrames[index], 'id', id)
           }
 
-          this.$refs.rightDom.refreshList(res, (item) => {
+          this.$refs.rightDom.refreshList(res, index, (item) => {
             this.scrolltoPos(item)
           })
         })
