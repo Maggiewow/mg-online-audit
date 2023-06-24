@@ -215,11 +215,6 @@ export default {
 				.find('option:selected')
 				.text('1.0X')
 			$('#default_opt').attr('selected', true)
-
-			// html5-video标签屏蔽右键视频另存为的js代码
-			$('#myVideo').bind('contextmenu', function() {
-				return false
-			})
 		},
 		/**
 		 * 加载视频资源
