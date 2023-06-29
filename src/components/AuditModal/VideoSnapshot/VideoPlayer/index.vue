@@ -18,7 +18,13 @@
 			></image-draw>
 			<div id="videoPlayer">
 				<!-- <p class="white-title">{{ videoName }}</p> -->
-				<video id="myVideo" ref="originalVideo" class="video-js my_video" controls>
+				<video
+					id="myVideo"
+					ref="originalVideo"
+					class="video-js my_video"
+					controls
+					:crossorigin="crossoriginVal"
+				>
 					<source :src="videoUrl" type="video/mp4" />
 					<!-- <source :src="defaultVideoUrl" type="video/mp4" /> -->
 				</video>
@@ -32,6 +38,8 @@
 							v-model="playerPercentage"
 							:show-tooltip="false"
 							@change="handleSliderChange"
+							@mousedown.native="isChange = true"
+							@mouseup.native="isChange = false"
 						></el-slider>
 					</div>
 					<span class="text">{{ playerDurationFrame }}帧 / {{ playerFormatDuration }}</span>
@@ -42,7 +50,8 @@
 </template>
 
 <script>
-import VideoCapture from 'video-capture'
+import captureVideoFrame from '@/assets/js/lib/CaptureVideoFrame'
+// import VideoCapture from 'video-capture'
 import { setInterval } from 'timers'
 import iconIncrease from './icons/icon-increase.png'
 import iconLower from './icons/icon-lower.png'
@@ -130,6 +139,11 @@ export default {
 			isFullscreen: false, // 是否为全屏状态
 			defaultVideoUrl:
 				'https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4',
+			// 视频实际宽高
+			videoWidth: 0,
+			videoHeight: 0,
+			crossoriginVal: 'anonymous', // 'anonymous' | 'use-credentials'
+			isChange: false,
 		}
 	},
 	components: {
@@ -194,17 +208,18 @@ export default {
 					_self.videoPlayer.currentTime(
 						Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime)
 					)
-				} else if (e && e.keyCode === 32) {
-					e.preventDefault()
-					if (_self.videoPlayer.paused()) {
-						_self.videoPlayer.play()
-						_self.playerControls.stateIcon = 'el-icon-video-pause'
-						_self.playerStepInterval()
-					} else {
-						_self.videoPlayer.pause()
-						_self.playerControls.stateIcon = 'el-icon-video-play'
-					}
 				}
+				//  else if (e && e.keyCode === 32) {
+				// 	e.preventDefault()
+				// 	if (_self.videoPlayer.paused()) {
+				// 		_self.videoPlayer.play()
+				// 		_self.playerControls.stateIcon = 'el-icon-video-pause'
+				// 		_self.playerStepInterval()
+				// 	} else {
+				// 		_self.videoPlayer.pause()
+				// 		_self.playerControls.stateIcon = 'el-icon-video-play'
+				// 	}
+				// }
 			}
 		},
 		initRate() {
@@ -215,6 +230,21 @@ export default {
 				.find('option:selected')
 				.text('1.0X')
 			$('#default_opt').attr('selected', true)
+
+			setTimeout(() => {
+				// 开始/恢复播放
+				player.on('play', function() {
+					$('.vjs-play-control').addClass('vjs-playing')
+				})
+				// 暂停播放
+				player.on('pause', function() {
+					$('.vjs-play-control').removeClass('vjs-playing')
+				})
+				// 结束播放
+				player.on('ended', function() {
+					$('.vjs-play-control').removeClass('vjs-playing')
+				})
+			}, 200)
 		},
 		/**
 		 * 加载视频资源
@@ -238,16 +268,18 @@ export default {
 			this.videoPlayer.height(pHeight + 'px')
 			this.videoPlayer.src(this.videoUrl)
 			this.videoPlayer.load(this.videoUrl)
-
+			console.log('初始化视频', project, pWidth, pHeight)
 			var _self = this
 			// 谷歌浏览器有时不允许自动播放音视频 给用户造成噪音干扰
 			this.videoPlayer
 				.play()
 				.then((res) => {
 					_self.playerControls.stateIcon = 'el-icon-video-pause'
+					$('.vjs-play-control').addClass('vjs-playing')
 				})
 				.catch((err) => {
 					_self.playerControls.stateIcon = 'el-icon-video-play'
+					$('.vjs-play-control').removeClass('vjs-playing')
 				})
 				.finally(() => {
 					setTimeout(() => {
@@ -314,6 +346,8 @@ export default {
 			video &&
 				video.addEventListener('canplay', function() {
 					let rate = (this.videoWidth / this.videoHeight).toFixed(3)
+					_self.videoWidth = this.videoWidth
+					_self.videoHeight = this.videoHeight
 
 					// this.height = this.width / parseFloat(rate);
 					if (parseFloat(rate) > 1) {
@@ -364,7 +398,10 @@ export default {
 				_self.playerCurrentPostion = _self.videoPlayer.currentTime()
 				_self.playerFormatCurrentPostion = _self.formatSeconds(_self.playerCurrentPostion)
 				_self.playerCurrentFrame = _self.calcFrame(_self.playerCurrentPostion)
-				_self.playerPercentage = (_self.playerCurrentPostion / _self.playerDuration) * 100
+
+				if (!_self.isChange) {
+					_self.playerPercentage = (_self.playerCurrentPostion / _self.playerDuration) * 100
+				}
 			}, 1000 / 25)
 		},
 		changeVolume: function(type) {
@@ -409,32 +446,36 @@ export default {
 			this.$emit('getCurrentVideoMode', !this.videoPlayerIsShow)
 			if (this.videoPlayerIsShow) {
 				let _self = this
-				if (this.videoPlayer.currentTime() > 0) {
-					_self.playerLoading = true
-					_self.playerLoadingText = '正在获取视频流...'
-					this.videoPlayer.pause()
-					this.playerControls.stateIcon = 'el-icon-video-play'
-					// 截图
-					if (this.playerCurrentPostion <= 0) {
-						this.$Message.warning('时间选择应该大于0')
-						return
-					}
+				// if (this.videoPlayer.currentTime() > 0) {
+				_self.playerLoading = true
+				_self.playerLoadingText = '正在获取视频流...'
+				this.videoPlayer.pause()
+				this.playerControls.stateIcon = 'el-icon-video-play'
+				// // 截图
+				// if (this.playerCurrentPostion <= 0) {
+				// 	this.$Message.warning('时间选择应该大于0')
+				// 	return
+				// }
 
-					let dom1 = new VideoCapture(this.videoUrl)
-					let { dataURL, width, height } = await dom1.capture(this.playerCurrentPostion)
-					// let { dataURL, width, height } = await new VideoCapture(
-					//   this.videoUrl
-					// ).capture(_self.playerCurrentPostion);
-					// console.log("截图得到", width, height, dataURL);
+				// let dom1 = new VideoCapture(this.videoUrl)
+				// let { dataURL } = await dom1.capture(this.playerCurrentPostion)
 
-					// 插件自动生成png 后端要求jpg jpeg
-					dataURL = dataURL.replace('png', 'jpeg')
-					this.$refs.imageDraw.loadImage(dataURL)
-					this.videoPlayerIsShow = false
-					_self.playerLoading = false
-				} else {
-					this.$message.error('时间是大于0的数字')
-				}
+				// // 插件自动生成png 后端要求jpg jpeg
+				// dataURL = dataURL.replace('png', 'jpeg')
+
+				this.crossoriginVal = 'anonymous'
+				const frame = captureVideoFrame('myVideo_html5_api', this.videoWidth, this.videoHeight)
+				console.log('批注--frame', frame)
+				let dataURL = frame.dataUri
+
+				this.crossoriginVal = 'use-credentials'
+
+				this.$refs.imageDraw.loadImage(dataURL)
+				this.videoPlayerIsShow = false
+				_self.playerLoading = false
+				// } else {
+				// 	this.$message.error('时间是大于0的数字')
+				// }
 			} else {
 				this.$message.error('已处于视频标注模式')
 			}
