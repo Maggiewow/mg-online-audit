@@ -26,7 +26,6 @@
 					:crossorigin="crossoriginVal"
 				>
 					<source :src="videoUrl" type="video/mp4" />
-					<!-- <source :src="defaultVideoUrl" type="video/mp4" /> -->
 				</video>
 			</div>
 
@@ -137,8 +136,6 @@ export default {
 				// }
 			},
 			isFullscreen: false, // 是否为全屏状态
-			defaultVideoUrl:
-				'https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4',
 			// 视频实际宽高
 			videoWidth: 0,
 			videoHeight: 0,

@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-06-29 11:08:23
+ * @LastEditTime: 2023-06-29 14:51:32
 -->
 <template>
 	<div>
@@ -425,9 +425,8 @@ export default {
 			return this.userInfo.id || ''
 		},
 		isTranscodeUrl() {
-			// https://stream7.shandian8.com/1/sucaiku/202205/17/011311e6f6064e849b1167ed9f9b13c1.mp4
-			// https://stream7-transcode.iqilu.com/1/sucaiku/202105/06/96d08ad6a4874193b3c57a3ca009b26b.mp4
-			return this.playInfo.url.startsWith('https://stream7-transcode.iqilu.com')
+			// https://stream7-transcode.iqilu.com  ==> https://stream7-transcode.litenews.cn
+			return this.playInfo.url.startsWith('https://stream7-transcode.')
 		},
 		// 无法播放的视频格式 只能用转码封面替代视频标签展示
 		isMXFUrl() {
@@ -504,8 +503,8 @@ export default {
 						this.versionList = versions
 						this.formItem.version = initVersion
 
-						// 横屏视频url = 'https://stream7-transcode.iqilu.com/1/sucaiku/202106/27/94267d670bd446d68cf1df95abf6fa55.mp4'
-						// 竖屏视频 url = 'https://stream7-transcode.iqilu.com/1/sucaiku/202104/28/ed24825f209642d789ef2d054459eab4.mp4';
+						// 横屏视频url = 'https://stream7-transcode.litenews.cn/1/sucaiku/202306/29/f2cd101405c64a89961d458d79b8958e_cbr_2000.mp4'
+
 						// created_at file_duration file_name file_size file_type user
 						if (!initVersion || initVersion === '0') {
 							let lastestVersion = versions.length > 0 ? versions[0].version : '0'
