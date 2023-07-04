@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-06-29 14:51:32
+ * @LastEditTime: 2023-06-30 17:53:03
 -->
 <template>
 	<div>
@@ -503,7 +503,11 @@ export default {
 						this.versionList = versions
 						this.formItem.version = initVersion
 
-						// 横屏视频url = 'https://stream7-transcode.litenews.cn/1/sucaiku/202306/29/f2cd101405c64a89961d458d79b8958e_cbr_2000.mp4'
+						// fake视频
+						// url = 'https://stream7-transcode.iqilu.com/1/sucaiku/202106/27/94267d670bd446d68cf1df95abf6fa55.mp4'
+						// url = 'https://stream7.shandian8.com/1/sucaiku/202306/01/3e9e1d7df05f4c49b961eb4e975dd3b9.mp4'
+						// url = 'https://stream7-transcode.litenews.cn/1/sucaiku/202306/29/f2cd101405c64a89961d458d79b8958e_cbr_2000.mp4'
+						// url = 'https://stream7.feixing.link/1/sucaiku/202303/22/75c2774140174046bf84de1944cc7b05.mp4'
 
 						// created_at file_duration file_name file_size file_type user
 						if (!initVersion || initVersion === '0') {

@@ -4,7 +4,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 10:14:58
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-06-28 18:01:41
+ * @LastEditTime: 2023-06-30 11:08:20
 -->
 
 <template>
@@ -43,13 +43,7 @@ export default {
 		}
 	},
 	components: { VideoPlayer },
-	mounted() {
-		// let bH = document.body.offsetHeight
-		// let videoPlayer = document.getElementsByClassName('video-player')
-		// this.pHeight = videoPlayer[0].offsetHeight
-		// this.pWidth = videoPlayer[0].offsetWidth
-		// this.setSource(); // 父组件主动触发
-	},
+	mounted() {},
 	methods: {
 		handleMark() {
 			this.$refs.videoPlayer.handleMark()
@@ -60,13 +54,13 @@ export default {
 		setSource(obj) {
 			this.playInfo = obj
 			if (!this.playInfo.id) {
-				this.$message.error('暂无视频信息')
+				this.$Message.error('暂无视频信息')
 				return
 			}
 
 			this.currentId = this.playInfo.id
 			if (this.currentVideoIsEdit) {
-				this.$message.error('处于视频标注模式')
+				this.$Message.error('处于视频标注模式')
 			} else {
 				let bH = document.body.offsetHeight
 				let videoPlayer = document.getElementsByClassName('video-player')
@@ -84,7 +78,7 @@ export default {
 			this.currentId = projectList[0].id
 			this.submitList = [...projectLists]
 			if (this.currentVideoIsEdit) {
-				this.$message.error('处于视频标注模式')
+				this.$Message.error('处于视频标注模式')
 			} else {
 				this.$refs.videoPlayer.initVideoUrl(this.playInfo, this.pWidth, this.pHeight)
 				this.$refs.videoPlayer.initNextVideo(index, projectList)

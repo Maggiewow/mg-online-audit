@@ -51,7 +51,6 @@
 <script>
 import captureVideoFrame from '@/assets/js/lib/CaptureVideoFrame'
 // import VideoCapture from 'video-capture'
-import { setInterval } from 'timers'
 import iconIncrease from './icons/icon-increase.png'
 import iconLower from './icons/icon-lower.png'
 import iconFullscreen from './icons/icon-fullscreen.png'
@@ -382,7 +381,7 @@ export default {
 					this.playerControls.stateIcon = 'el-icon-video-play'
 				}
 			} else {
-				this.$message.error('处于视频标注模式')
+				this.$Message.error('处于视频标注模式')
 			}
 		},
 		playerStepInterval() {
@@ -416,7 +415,7 @@ export default {
 				this.playerVolume = Math.round(this.playerVolume * 10) / 10
 				this.videoPlayer.volume(this.playerVolume)
 			} else {
-				this.$message.error('处于视频标注模式')
+				this.$Message.error('处于视频标注模式')
 			}
 		},
 
@@ -429,7 +428,7 @@ export default {
 				let time = (this.playerDuration * data) / 100
 				this.videoPlayer.currentTime(time)
 			} else {
-				this.$message.error('处于视频标注模式')
+				this.$Message.error('处于视频标注模式')
 			}
 		},
 		/**
@@ -448,7 +447,8 @@ export default {
 				_self.playerLoadingText = '正在获取视频流...'
 				this.videoPlayer.pause()
 				this.playerControls.stateIcon = 'el-icon-video-play'
-				// // 截图
+
+				// 截图
 				// if (this.playerCurrentPostion <= 0) {
 				// 	this.$Message.warning('时间选择应该大于0')
 				// 	return
@@ -464,17 +464,16 @@ export default {
 				const frame = captureVideoFrame('myVideo_html5_api', this.videoWidth, this.videoHeight)
 				console.log('批注--frame', frame)
 				let dataURL = frame.dataUri
-
 				this.crossoriginVal = 'use-credentials'
 
 				this.$refs.imageDraw.loadImage(dataURL)
 				this.videoPlayerIsShow = false
 				_self.playerLoading = false
 				// } else {
-				// 	this.$message.error('时间是大于0的数字')
+				// 	this.$Message.error('时间是大于0的数字')
 				// }
 			} else {
-				this.$message.error('已处于视频标注模式')
+				this.$Message.error('已处于视频标注模式')
 			}
 		},
 		/**
