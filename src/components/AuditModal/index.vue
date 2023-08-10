@@ -7,7 +7,7 @@
  * @作者: 赵婷婷
  * @Date: 2021-05-25 09:42:55
  * @LastEditors: 赵婷婷
- * @LastEditTime: 2023-06-30 17:53:03
+ * @LastEditTime: 2023-08-10 14:19:42
 -->
 <template>
 	<div>
@@ -408,7 +408,8 @@ export default {
 		},
 		requestUrlObj: {
 			handler(obj) {
-				this.$store.commit('setBaseUrlObj', obj)
+				// this.$store.commit('setBaseUrlObj', obj)
+				sessionStorage.setItem('baseUrlObj', JSON.stringify(obj))
 			},
 			immediate: true,
 		},
